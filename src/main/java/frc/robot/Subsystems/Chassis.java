@@ -79,8 +79,8 @@ public class Chassis extends SubsystemBase
         double lr;
         
         //Input velocities and turn
-        double VX   = 0;
-        double VY   = 0;
+        double vx   = 0;
+        double vy   = 0;
         double turn = 0;
 
         //
@@ -98,7 +98,7 @@ public class Chassis extends SubsystemBase
         lr = Math.sin(turnAngle);
 
         //Apply dead zone for velocities
-        if(Math.abs(x1) > 0.15) VX = x1;
+        if(Math.abs(x1) > 0.15) vx = x1;
         
         
 
