@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,6 +46,11 @@ public class Chassis extends SubsystemBase
     public Chassis ()
     {
         
+        //reset encoders and gyro to ensure autonomous path following is correct
+
+        resetEncoders();
+        zeroHeading();
+
         //Instantiating Drivetrain objects
 
         m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
@@ -82,6 +88,7 @@ public class Chassis extends SubsystemBase
         }
     }
 
+    //Takes input from analog sticks and convert it into turn and x,y velocities for the wheels
     public void convertSwerveValues (double x1, double y1, double x2)
     {
         //Width and length of robot
@@ -138,7 +145,8 @@ public class Chassis extends SubsystemBase
 
         //Finding speed of each wheel based on x and y velocities
  
-        if(highestSpeed > 1){
+        if(highestSpeed > 1)
+        {
             frontRight[0] = frontRight[0] / highestSpeed;
             frontLeft[0] = frontLeft[0] / highestSpeed;
             backLeft[0] = backLeft[0] / highestSpeed;
@@ -146,33 +154,76 @@ public class Chassis extends SubsystemBase
         }
 
         //update last angle
-        frontRight[4] = frontRight[3];
-        frontLeft[4] = frontLeft[3];
-        backLeft[4] = backLeft[3];
-        backRight[4] = backLeft[3];
+        frontRight[2] = frontRight[1];
+        frontLeft[2] = frontLeft[1];
+        backLeft[2] = backLeft[1];
+        backRight[2] = backLeft[1];
 
         //Set new angles
-        if(!(vX == 0 && vY == 0 && turn == 0)){
+        if(!(vX == 0 && vY == 0 && turn == 0))
+        {
             //Find angle of each wheel based on velocities
-            frontRight[3] = Math.atan2(c, b) - Math.PI/2;
-            frontLeft[3] = Math.atan2(d, b) - Math.PI/2;
-            backLeft[3] = Math.atan2(d, a) - Math.PI/2;
-            backRight[3] = Math.atan2(c, a) - Math.PI/2;
+            frontRight[1] = Math.atan2(c, b) - Math.PI/2;
+            frontLeft[1] = Math.atan2(d, b) - Math.PI/2;
+            backLeft[1] = Math.atan2(d, a) - Math.PI/2;
+            backRight[1] = Math.atan2(c, a) - Math.PI/2;
         }
 
         //When a wheel moves more than half a circle in one direction, offsets so it goes the shorter route
         if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] -= 2 * Math.PI;
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] += 2 * Math.PI;
-        // if((Math.abs(frontL[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] -= 2 * Math.PI;
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] += 2 * Math.PI;
+        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] > frontRight[1])) frontRight[3] += 2 * Math.PI;
+        if((Math.abs(frontLeft[2] - frontLeft[1]) > Math.PI && frontLeft[2] < frontLeft[1])) frontLeft[3] -= 2 * Math.PI;
+        if((Math.abs(frontLeft[2] - frontLeft[1]) > Math.PI && frontLeft[2] > frontLeft[1])) frontLeft[3] += 2 * Math.PI;
 
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] -= 2 * Math.PI;
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] += 2 * Math.PI;
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] -= 2 * Math.PI;
-        if((Math.abs(frontRight[2] - frontRight[1]) > Math.PI && frontRight[2] < frontRight[1])) frontRight[3] += 2 * Math.PI;
-        
-        
+        if((Math.abs(backLeft[2] - backLeft[1]) > Math.PI && backLeft[2] < backLeft[1])) backLeft[3] -= 2 * Math.PI;
+        if((Math.abs(backLeft[2] - backLeft[1]) > Math.PI && backLeft[2] > backLeft[1])) backLeft[3] += 2 * Math.PI;
+        if((Math.abs(backRight[2] - backRight[1]) > Math.PI && backRight[2] < backRight[1])) backRight[3] -= 2 * Math.PI;
+        if((Math.abs(backRight[2] - backRight[1]) > Math.PI && backRight[2] > backRight[1])) backRight[3] += 2 * Math.PI;
 
+        drive(m_speedMotorFrontRight, m_angleMotorFrontRight, frontRight[0], -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+        drive(m_speedMotorFrontLeft, m_angleMotorFrontLeft, frontLeft[0], -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+        drive(m_speedMotorBackLeft, m_angleMotorBackLeft, backLeft[0], -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+        drive(m_speedMotorBackRight, m_angleMotorBackRight, backRight[0], -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+
+    }
+
+    public void drive(WPI_TalonFX speedMotor, WPI_TalonFX angleMotor, double speed, double angle)
+    {
+        speedMotor.set(speed);
+
+        double setPoint = angle * (Constants.swerveDriveMaxVoltage * 1.5);
+
+        if(setPoint < 0)    setPoint += Constants.swerveDriveMaxVoltage;
+        if(setPoint > Constants.swerveDriveMaxVoltage)  setPoint -= Constants.swerveDriveMaxVoltage;
+
+        angleMotor.set(TalonFXControlMode.Position, angle);
+        
+        System.out.println("Speed: " + speed);
+        System.out.println("Angle: " + angle);
+    }
+
+    public WPI_TalonFX getDriverJoystick(WPI_TalonFX motor)
+    {
+        return motor;
+    }
+
+    //Reset gyro to zero the heading of the robot
+    public void zeroHeading()
+    {
+        m_ahrs.reset();
+        m_ahrs.setAngleAdjustment(0.0);
+    }
+
+    public void resetEncoders()
+    {
+        m_angleMotorFrontRight.setSelectedSensorPosition(0);
+        m_speedMotorFrontRight.setSelectedSensorPosition(0);
+        m_angleMotorFrontLeft.setSelectedSensorPosition(0);
+        m_speedMotorFrontLeft.setSelectedSensorPosition(0);
+        m_angleMotorBackLeft.setSelectedSensorPosition(0);
+        m_speedMotorBackLeft.setSelectedSensorPosition(0);
+        m_angleMotorBackRight.setSelectedSensorPosition(0);
+        m_speedMotorBackRight.setSelectedSensorPosition(0);
     }
      
     //endregion

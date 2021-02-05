@@ -3,8 +3,19 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import frc.robot.Commands.*;
+import frc.robot.Subsystems.*;
+
 public class RobotContainer 
 {
+
+    //instantiate subsystems
+    public static final Chassis m_chassis = new Chassis();
+    
+    //instantiate 
+    public static final OI m_OI = new OI();
+    public static final InlineCommands m_inlineCommands = new InlineCommands();
+
     public static void configureTalonFX(WPI_TalonFX talonFX, boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD) 
     {
         /* Factory default to reset TalonFX and prevent unexpected behavior. */
