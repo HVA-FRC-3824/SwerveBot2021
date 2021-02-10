@@ -45,6 +45,18 @@ public class Constants
 
     //region Misc
 
+    //region Gyro
+
+    public static final boolean k_gyro_reversed = true;
+
+    //endregion
+
+    //region Speeds
+    
+    public static final float   autonomousPathSpeed                              =3;
+
+    //endregion
+
     //region Motors
 
     //region swerve motors

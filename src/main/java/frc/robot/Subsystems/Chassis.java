@@ -9,6 +9,9 @@ import frc.robot.RobotContainer;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.*;
 
 public class Chassis extends SubsystemBase
 {
@@ -16,6 +19,13 @@ public class Chassis extends SubsystemBase
     //region variables
 
     private AHRS m_ahrs;
+
+    //region Auto
+
+    private SwerveDriveOdometry m_swerveDriveOdometry;
+    private SwerveDriveKinematics m_swerveDriveKinematics;
+
+    //endregion
 
     //region motors
     private WPI_TalonFX m_angleMotorFrontRight;
@@ -45,6 +55,7 @@ public class Chassis extends SubsystemBase
     
     public Chassis ()
     {
+
         
         //reset encoders and gyro to ensure autonomous path following is correct
 
@@ -76,6 +87,9 @@ public class Chassis extends SubsystemBase
                 
         m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_swerveDriveKinematics = new SwerveDriveKinematics();
+        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, Rotation2d.fromDegrees(getHeading()));
     
         //Try to instantiate the navX gyro with exception
         try
@@ -86,6 +100,7 @@ public class Chassis extends SubsystemBase
         {
             System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
         }
+
     }
 
     //Takes input from analog sticks and convert it into turn and x,y velocities for the wheels
@@ -212,6 +227,11 @@ public class Chassis extends SubsystemBase
     {
         m_ahrs.reset();
         m_ahrs.setAngleAdjustment(0.0);
+    }
+
+    public double getHeading()
+    {
+        return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.k_gyro_reversed ? -1.0 : 1.0);
     }
 
     public void resetEncoders()

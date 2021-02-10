@@ -7,6 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Commands.*;
 import frc.robot.Subsystems.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer 
 {
@@ -15,6 +18,12 @@ public class RobotContainer
     public static final Chassis m_chassis = new Chassis();
 
     public static final Launcher m_launcher = new Launcher();
+
+    //region misc
+
+    private final SendableChooser<String> m_autoChooser = new SendableChooser<>();
+
+    //endregion
     
     //instantiate 
     public static final OI m_OI = new OI();
@@ -124,6 +133,50 @@ public class RobotContainer
   {
     // (RPM * TPR Units/Revolution / 600 100ms/min)
     return rpm * tpr / 600;
+  }
+
+  //Set options for autonomous command choser & display them for selection on the SmartDashboard
+  private void initializeAutoChooser()
+  {
+    //Add command options to chooser
+    m_autoChooser.setDefaultOption("DEFAULT COMMAND", "default");
+    m_autoChooser.addOption("GALACTIC BLUE A", "galacticBlueA");
+    m_autoChooser.addOption("GALACTIC BLUE B", "galacticBlueB");
+    m_autoChooser.addOption("GALACTICREDA", "galacticRedA");
+    m_autoChooser.addOption("GALACTICREDB", "galacticRedB");
+    m_autoChooser.addOption("BARREL", "barrel");
+    m_autoChooser.addOption("Bounce", "bounce");
+    m_autoChooser.addOption("SLALOM", "slalom");
+
+    //Display chooser on smart dashboard
+
+    SmartDashboard.putData("Autonomous Commands", m_autoChooser);
+  }
+    //Return the command to run during autonomous
+  public Command getAutonomousCommand ()
+  {
+    switch (m_autoChooser.getSelected())
+    {
+      case "default":
+        return null;
+      case "galacticBlueA":
+        return new AutoGalacticBlueA();
+      case "galacticBlueB":
+        return new AutoGalacticBlueB();
+      case "galacticRedA":
+        return new AutoGalacticRedA();
+      case "galacticRedB":
+        return new AutoGalacticRedB();
+      case "barrel":
+        return new AutoNavBarrel();
+      case "bounce":
+        return new AutoNavBounce();
+      case "slalom":
+        return new AutoNavSlalom();
+      default:
+        System.out.println("\nError selecting autonomous command:\nCommand selected: "+m_autoChooser.getSelected()+"\n");
+        return null;
+    }
   }
 
 }
