@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+
 public class Constants 
 {
 
@@ -87,6 +91,20 @@ public class Constants
     //endregion
 
     //endregion
+
+    //region Voltage things idrk wtf this is ngl
+
+    public static final double k_ramseteB                                     = 2;
+    public static final double k_ramseteZeta                                  = 0.7;
+
+    public static final double k_sVolts                                       = 0.372;
+    public static final double k_vVoltSPM                                     = 3.09;
+    public static final double k_aVoltSPM2                                    = 0.154;
+    public static final double k_pDriveVel                                    = 0.00425;
+    public static final double k_trackWidthMeters                             = 0.774;
+    public static final SwerveDriveKinematics k_driveKinematics               = new SwerveDriveKinematics( new Translation2d(0, 0) );
+
+    public static final double k_maxAccelerationMPS2                          = 3.0;
 
     //endregion
 

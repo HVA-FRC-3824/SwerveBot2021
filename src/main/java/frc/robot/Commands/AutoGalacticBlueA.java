@@ -24,13 +24,12 @@ public class AutoGalacticBlueA extends SequentialCommandGroup {
         //run chamber
 
         //follow path to pick up balls
-       // RobotContainer.m_chassis.generateramsete(startingPose, wayPoints, endingPose, Constants.autonomousPathSpeed, false);
-
+        // RobotContainer.m_chassis.generateRamsete(startingPose, wayPoints, endingPose, Constants.autonomousPathSpeed, false);
         //stop chamber
 
         //stop intake
 
         //follow path to finish
-
+        );
     }
 }
