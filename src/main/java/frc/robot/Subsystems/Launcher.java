@@ -83,15 +83,15 @@ public class Launcher extends SubsystemBase
    * @param rpm is converted to a velocity (units/100ms) for the launcher wheels PID to be set to.*/
   public void setTopLeftWheelRPM(int rpm)
   {
-    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.launcherTopWheelTPR));
+    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
   }
   public void setTopWheelRPM(int rpm)
   {
-    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.launcherTopWheelTPR));
+    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
   }
   public void setBottomWheelRPM(int rpm)
   {
-    m_bottomWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.launcherBottomWheelTPR));
+    m_bottomWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
   }
 
   //Sets power of linear actuator for launcher pivot angle.

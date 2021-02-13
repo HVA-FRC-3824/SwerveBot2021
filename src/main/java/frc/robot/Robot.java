@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,7 +41,10 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() 
+  {
+    CommandScheduler.getInstance().run();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -54,8 +59,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() 
   {
-    RobotContainer.m_chassis.zeroHeading();
-    RobotContainer.m_chassis.resetEncoders();
+    // RobotContainer.m_chassis.zeroHeading();
+    // RobotContainer.m_chassis.resetEncoders();
   }
 
   /** This function is called periodically during autonomous. */
@@ -74,7 +79,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() 
+  {
+    RobotContainer.initializeDefaultCommands();
+  }
 
   /** This function is called periodically during operator control. */
   @Override

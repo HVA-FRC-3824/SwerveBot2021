@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -60,51 +61,6 @@ public class Chassis extends SubsystemBase {
     // endregion
 
     // region methods
-
-    public Chassis() {
-
-        // reset encoders and gyro to ensure autonomous path following is correct
-
-        resetEncoders();
-        zeroHeading();
-
-        // Instantiating Drivetrain objects
-
-        m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorFrontRight = new WPI_TalonFX(Constants.frontRightSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorBackLeft = new WPI_TalonFX(Constants.backLeftAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorBackLeft = new WPI_TalonFX(Constants.backLeftSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorBackRight = new WPI_TalonFX(Constants.backRightAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_swerveDriveKinematics = new SwerveDriveKinematics();
-        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, Rotation2d.fromDegrees(getHeading()));
-
-        // Try to instantiate the navX gyro with exception
-        try {
-            m_ahrs = new AHRS(SPI.Port.kMXP);
-        } catch (RuntimeException ex) {
-            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
-        }
-
-    }
 
     // Takes input from analog sticks and convert it into turn and x,y velocities
     // for the wheels
@@ -208,13 +164,13 @@ public class Chassis extends SubsystemBase {
             backRight[3] += 2 * Math.PI;
 
         drive(m_speedMotorFrontRight, m_angleMotorFrontRight, frontRight[0],
-                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.motorTPR);
         drive(m_speedMotorFrontLeft, m_angleMotorFrontLeft, frontLeft[0],
-                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.motorTPR);
         drive(m_speedMotorBackLeft, m_angleMotorBackLeft, backLeft[0],
-                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.motorTPR);
         drive(m_speedMotorBackRight, m_angleMotorBackRight, backRight[0],
-                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.motorTicksPerRevolution);
+                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.motorTPR);
 
     }
 
@@ -234,54 +190,6 @@ public class Chassis extends SubsystemBase {
         System.out.println("Angle: " + angle);
     }
 
-    public void generateRamsete(Pose2d startingPose, List<Translation2d> waypoints, Pose2d endingPose, double vel,
-            boolean isReversed) {
-        //TODO Voltage constraint so never telling robot to move faster than it is capable of achieving.
-
-        
-        // Configuration for trajectory that wraps path constraints.
-        TrajectoryConfig trajConfig =
-          new TrajectoryConfig(vel,
-                               Constants.k_maxAccelerationMPS2)
-              // Add kinematics to track robot speed and ensure max speed is obeyed.
-              .setKinematics(Constants.k_driveKinematics)
-              //TODO Apply voltage constraint created above
-
-              // Reverse the trajectory based on parameter.
-              .setReversed(isReversed);
-    
-        // Generate trajectory: initialPose, interiorWaypoints, endPose, trajConfig
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-          // Starting pose
-          startingPose,
-          // Pass through these interior waypoints
-          waypoints,
-          // Ending pose
-          endingPose,
-          // Pass config
-          trajConfig
-        );
-    
-        /* Create command that will follow the trajectory. */
-        /*TODO RamseteCommand ramseteCommand = new RamseteCommand(
-          trajectory,
-          RobotContainer.m_chassis::getPose,
-          new RamseteController(Constants.k_ramseteB, Constants.k_ramseteZeta),
-          new SimpleMotorFeedforward(Constants.k_sVolts,
-                                     Constants.k_vVoltSPM,
-                                     Constants.k_aVoltSPM2),
-          Constants.K_DRIVE_KINEMATICS,
-          RobotContainer.m_chassis::getWheelSpeeds,
-          new PIDController(Constants.k_p_drive_Vel, 0, 0),
-          new PIDController(Constants.k_p_drive_Vel, 0, 0),
-          RobotContainer.m_chassis::driveWithVoltage, // RamseteCommand passes volts to the callback.
-          RobotContainer.m_chassis
-        );
-    
-        // Return command group that will run path following command, then stop the robot at the end. 
-        return ramseteCommand.andThen(new InstantCommand(() -> RobotContainer.m_chassis.driveWithVoltage(0, 0)));*/
-      }
-
     public WPI_TalonFX getDriverJoystick(WPI_TalonFX motor)
     {
         return motor;
@@ -296,7 +204,7 @@ public class Chassis extends SubsystemBase {
 
     public double getHeading()
     {
-        return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.k_gyro_reversed ? -1.0 : 1.0);
+        return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.k_gyroReversed ? -1.0 : 1.0);
     }
 
     public void resetEncoders()
@@ -309,6 +217,51 @@ public class Chassis extends SubsystemBase {
         m_speedMotorBackLeft.setSelectedSensorPosition(0);
         m_angleMotorBackRight.setSelectedSensorPosition(0);
         m_speedMotorBackRight.setSelectedSensorPosition(0);
+    }
+
+    public Chassis() {
+
+        // Instantiating Drivetrain objects
+
+        m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorFrontRight = new WPI_TalonFX(Constants.frontRightSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorBackLeft = new WPI_TalonFX(Constants.backLeftAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorBackLeft = new WPI_TalonFX(Constants.backLeftSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorBackRight = new WPI_TalonFX(Constants.backRightAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_swerveDriveKinematics = new SwerveDriveKinematics();
+        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, Rotation2d.fromDegrees(getHeading()));
+
+        // reset encoders and gyro to ensure autonomous path following is correct
+
+        this.resetEncoders();
+        this.zeroHeading();
+
+        // Try to instantiate the navX gyro with exception
+        try {
+            m_ahrs = new AHRS(SPI.Port.kMXP);
+        } catch (RuntimeException ex) {
+            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
+        }
+
     }
 
     //endregion
