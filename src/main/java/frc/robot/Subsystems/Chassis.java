@@ -129,7 +129,7 @@ public class Chassis extends SubsystemBase {
         double d;
 
         // Apply deadzone to turn analog stick
-        if (Math.abs(x2) > 0.15)
+        if (Math.abs(x2) > 0.2)
             turn = x2;
 
         // Find similar triangles to chassis for turn vectors (radius = 1)
@@ -138,9 +138,9 @@ public class Chassis extends SubsystemBase {
         lR = Math.sin(turnAngle);
 
         // Apply dead zone for velocities
-        if (Math.abs(x1) > 0.15)
+        if (Math.abs(x1) > 0.2)
             vX = x1;
-        if (Math.abs(y1) > 0.15)
+        if (Math.abs(y1) > 0.2)
             vY = -y1;
 
         // Establishing swerve gyro difference
@@ -219,7 +219,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public void drive(WPI_TalonFX speedMotor, WPI_TalonFX angleMotor, double speed, double angle) {
-        speedMotor.set(speed);
+        speedMotor.set(speed * 0.8);
 
         double setPoint = angle * (Constants.swerveDriveMaxVoltage * 1.5);
 
@@ -228,7 +228,7 @@ public class Chassis extends SubsystemBase {
         if (setPoint > Constants.swerveDriveMaxVoltage)
             setPoint -= Constants.swerveDriveMaxVoltage;
 
-        angleMotor.set(TalonFXControlMode.Position, angle);
+        angleMotor.set(TalonFXControlMode.Position, angle *0.8);
 
         System.out.println("Speed: " + speed);
         System.out.println("Angle: " + angle);
