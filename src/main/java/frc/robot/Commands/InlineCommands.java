@@ -21,6 +21,11 @@ public class InlineCommands
     public final Command m_driveWithJoystick;
     public final Command m_setHeading;
 
+    public final Command m_toggleIntakePistons;
+
+    public final Command m_setIntakeWheelsRPM;
+    public final Command m_stopIntakeWheels;
+
     //endregion
 
     //region methods
@@ -39,6 +44,15 @@ public class InlineCommands
 
         m_setHeading = 
             new InstantCommand(() -> RobotContainer.m_chassis.zeroHeading());
+        
+
+        m_toggleIntakePistons =
+            new InstantCommand(() -> RobotContainer.m_intake.toggleExtender());
+
+        m_setIntakeWheelsRPM = 
+            new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0.5), RobotContainer.m_intake);
+        m_stopIntakeWheels = 
+            new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0.0), RobotContainer.m_intake);
     }
 
     //endregion

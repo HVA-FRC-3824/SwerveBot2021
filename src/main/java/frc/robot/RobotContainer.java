@@ -19,6 +19,8 @@ public class RobotContainer
 
     public static final Launcher m_launcher = new Launcher();
 
+    public static final Intake m_intake = new Intake();
+
     //region misc
 
     private final SendableChooser<String> m_autoChooser = new SendableChooser<>();
@@ -29,13 +31,18 @@ public class RobotContainer
     public static final OI m_OI = new OI();
     public static final InlineCommands m_inlineCommands = new InlineCommands();
 
+    public static void initializeDefaultCommands()
+    {
+      m_chassis.setDefaultCommand(m_inlineCommands.m_driveWithJoystick);
+    }
+
     public static void configureTalonFX(WPI_TalonFX talonFX, boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD) 
     {
         /* Factory default to reset TalonFX and prevent unexpected behavior. */
         talonFX.configFactoryDefault();
 
         /* Configure Sensor Source for Primary PID. */
-        talonFX.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, Constants.k_pIDLoopIDX,
+        talonFX.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, Constants.k_PIDLoopIDX,
             Constants.k_timeoutMS);
 
         /* Configure TalonFX to drive forward when LED is green. */
@@ -55,7 +62,7 @@ public class RobotContainer
         talonFX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
 
         /* Set the Velocity gains (FPID) in slot0. */
-        talonFX.selectProfileSlot(Constants.k_slotIDX, Constants.k_pIDLoopIDX);
+        talonFX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
         talonFX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
         talonFX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
         talonFX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
@@ -65,7 +72,7 @@ public class RobotContainer
          * Reset/zero the TalonFX's sensor. Will be required for implementation into
          * chassis (position considered), but not launcher (velocity only).
          */
-        talonFX.setSelectedSensorPosition(0, Constants.k_pIDLoopIDX, Constants.k_timeoutMS);
+        talonFX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
     }
 
     public static void configureTalonSRX(WPI_TalonSRX talonSRX, boolean controlMode, FeedbackDevice feedbackDevice,
@@ -76,7 +83,7 @@ public class RobotContainer
         talonSRX.configFactoryDefault();
     
         // Configure Sensor Source for Primary PID.
-        talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.k_pIDLoopIDX, Constants.k_timeoutMS);
+        talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
     
         // Configure TalonSRX to drive forward when LED is green.
         talonSRX.setInverted(setInverted);
@@ -105,7 +112,7 @@ public class RobotContainer
         talonSRX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
     
         /* Set Motion Magic/Velocity gains (FPID) in slot0. */
-        talonSRX.selectProfileSlot(Constants.k_slotIDX, Constants.k_pIDLoopIDX);
+        talonSRX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
         talonSRX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
         talonSRX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
         talonSRX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
@@ -122,7 +129,7 @@ public class RobotContainer
         /* Reset/zero the TalonSRX's sensor. */
         if (resetPos)
         {
-          talonSRX.setSelectedSensorPosition(0, Constants.k_pIDLoopIDX, Constants.k_timeoutMS);
+          talonSRX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
         }
       }
     
