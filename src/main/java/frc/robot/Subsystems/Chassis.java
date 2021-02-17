@@ -2,12 +2,13 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
@@ -41,8 +42,8 @@ public class Chassis extends SubsystemBase {
     private WPI_TalonFX m_speedMotorBackRight;
     private SwerveModuleState m_backRightState;
 
-    public  SwerveDriveOdometry m_swerveDriveOdometry;
     private SwerveDriveKinematics m_swerveDriveKinematics;
+    public  SwerveDriveOdometry m_swerveDriveOdometry;
 
     // [Speed, Angle, Previous Angle, Offset]
     private double[] frontRight = { 0, 0, 0, 0 };
@@ -56,7 +57,58 @@ public class Chassis extends SubsystemBase {
 
     // region methods
 
+    public Chassis() 
+    {
 
+        // Instantiating Drivetrain objects
+
+        m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorFrontRight = new WPI_TalonFX(Constants.frontRightSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorBackLeft = new WPI_TalonFX(Constants.backLeftAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorBackLeft = new WPI_TalonFX(Constants.backLeftSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_angleMotorBackRight = new WPI_TalonFX(Constants.backRightAngleID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        //Module state setting
+        m_frontRightState = new SwerveModuleState(frontRight[0], Rotation2d.fromDegrees(frontRight[1]* 180/Math.PI)); //TODO add rpm to mps method
+        m_frontLeftState = new SwerveModuleState(frontLeft[0], Rotation2d.fromDegrees(frontLeft[1]* 180/Math.PI));
+        m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
+        m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
+
+        // Try to instantiate the navX gyro with exception
+        try {
+            m_ahrs = new AHRS(SPI.Port.kMXP);
+        } catch (RuntimeException ex) {
+            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
+        }
+
+        // Reset encoders and gyro to ensure autonomous path following is correct
+        this.resetEncoders();
+        this.zeroHeading();
+
+        //Instantiating the Swerve Kinematics & Odometry
+        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.frontRightLocationM, Constants.frontLeftLocationM, 
+                                    Constants.backLeftLocationM, Constants.backRightLocationM);
+        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
+
+    }
     
     // Takes input from analog sticks and convert it into turn and x,y velocities
     // for the wheels
@@ -215,64 +267,13 @@ public class Chassis extends SubsystemBase {
         m_speedMotorBackRight.setSelectedSensorPosition(0);
     }
 
-    public Chassis() {
-
-        // Instantiating Drivetrain objects
-
-        m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorFrontRight = new WPI_TalonFX(Constants.frontRightSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorBackLeft = new WPI_TalonFX(Constants.backLeftAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorBackLeft = new WPI_TalonFX(Constants.backLeftSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_angleMotorBackRight = new WPI_TalonFX(Constants.backRightAngleID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
-
-        //Module state setting
-        m_frontRightState = new SwerveModuleState(frontRight[0], Rotation2d.fromDegrees(frontRight[1]* 180/Math.PI)); //TODO add rpm to mps method
-        m_frontLeftState = new SwerveModuleState(frontLeft[0], Rotation2d.fromDegrees(frontLeft[1]* 180/Math.PI));
-        m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
-        m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
-
-        // reset encoders and gyro to ensure autonomous path following is correct
-
-        this.resetEncoders();
-        this.zeroHeading();
-
-        // Try to instantiate the navX gyro with exception
-        try {
-            m_ahrs = new AHRS(SPI.Port.kMXP);
-        } catch (RuntimeException ex) {
-            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
-        }
-
-        //Instantiating the Swerve Kinematics & Odometry
-        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.frontRightLocationM, Constants.frontLeftLocationM, 
-                                    Constants.backLeftLocationM, Constants.backRightLocationM);
-        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
-
-    }
+    
 
     public void updateOdometry() 
     {
     //get gyro angle. Negate values to match WPILib convention
-    var gyroAngle = Rotation2d.fromDegrees(-m_ahrs.getAngle());
-    // m_pose = m_swerveDriveOdometry.update(gyroAngle, )
+    var gyroAngle = Rotation2d.fromDegrees(-getHeading());
+    m_swerveDriveOdometry.update(gyroAngle, m_frontRightState, m_frontLeftState, m_backLeftState, m_backRightState);
     //Update odometry
     }
 
