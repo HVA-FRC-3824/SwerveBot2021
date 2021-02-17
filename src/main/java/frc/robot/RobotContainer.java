@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer 
 {
-
     //instantiate subsystems
     public static final Chassis m_chassis = new Chassis();
 
@@ -30,108 +29,109 @@ public class RobotContainer
     //instantiate 
     public static final OI m_OI = new OI();
     public static final InlineCommands m_inlineCommands = new InlineCommands();
+  
 
-    public static void initializeDefaultCommands()
+  public static void initializeDefaultCommands()
+  {
+    m_chassis.setDefaultCommand(m_inlineCommands.m_driveWithJoystick);
+  }
+
+  public static void configureTalonFX(WPI_TalonFX talonFX, boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD) 
+  {
+      /* Factory default to reset TalonFX and prevent unexpected behavior. */
+      talonFX.configFactoryDefault();
+
+      /* Configure Sensor Source for Primary PID. */
+      talonFX.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, Constants.k_PIDLoopIDX,
+          Constants.k_timeoutMS);
+
+      /* Configure TalonFX to drive forward when LED is green. */
+      talonFX.setInverted(setInverted);
+      /* Configure TalonFX's sensor to increment its value as it moves forward. */
+      talonFX.setSensorPhase(setSensorPhase);
+      
+      /**
+       * Configure the nominal and peak output forward/reverse.
+       * 
+       * Nominal Output: minimal/weakest motor output allowed during closed-loop. Peak
+       * Output: maximal/strongest motor output allowed during closed-loop.
+       */
+      talonFX.configNominalOutputForward(0, Constants.k_timeoutMS);
+      talonFX.configNominalOutputReverse(0, Constants.k_timeoutMS);
+      talonFX.configPeakOutputForward(1, Constants.k_timeoutMS);
+      talonFX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
+
+      /* Set the Velocity gains (FPID) in slot0. */
+      talonFX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
+      talonFX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
+      talonFX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
+      talonFX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
+      talonFX.config_kD(Constants.k_slotIDX, kD, Constants.k_timeoutMS);
+
+      /**
+       * Reset/zero the TalonFX's sensor. Will be required for implementation into
+       * chassis (position considered), but not launcher (velocity only).
+       */
+      talonFX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
+  }
+
+  public static void configureTalonSRX(WPI_TalonSRX talonSRX, boolean controlMode, FeedbackDevice feedbackDevice,
+  boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD, int kCruiseVelocity,
+  int kAcceleration, boolean resetPos)  
+  {
+    //Factory default to reset TalonSRX and prevent unexpected behavior.
+    talonSRX.configFactoryDefault();
+
+    // Configure Sensor Source for Primary PID.
+    talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
+
+    // Configure TalonSRX to drive forward when LED is green.
+    talonSRX.setInverted(setInverted);
+
+    // Configure TalonSRX's sensor to increment its value as it moves forward.
+    talonSRX.setSensorPhase(setSensorPhase);
+
+    // Determine if the internal PID is being used
+    if (controlMode)
     {
-      m_chassis.setDefaultCommand(m_inlineCommands.m_driveWithJoystick);
+        /* Set relevant frame periods (Base_PIDF0 and MotionMagic) to periodic rate
+        * (10ms).*/
+      talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.k_timeoutMS);
+      talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.k_timeoutMS);
     }
 
-    public static void configureTalonFX(WPI_TalonFX talonFX, boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD) 
+    /**
+     * Configure the nominal and peak output forward/reverse.
+     * 
+     * Nominal Output: minimal/weakest motor output allowed during closed-loop. Peak
+     * Output: maximal/strongest motor output allowed during closed-loop.
+     */
+    talonSRX.configNominalOutputForward(0, Constants.k_timeoutMS);
+    talonSRX.configNominalOutputReverse(0, Constants.k_timeoutMS);
+    talonSRX.configPeakOutputForward(1, Constants.k_timeoutMS);
+    talonSRX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
+
+    /* Set Motion Magic/Velocity gains (FPID) in slot0. */
+    talonSRX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
+    talonSRX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
+    talonSRX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
+    talonSRX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
+    talonSRX.config_kD(Constants.k_slotIDX, kD, Constants.k_timeoutMS);
+
+    // Determine if the internal PID is being used
+    if (controlMode)
     {
-        /* Factory default to reset TalonFX and prevent unexpected behavior. */
-        talonFX.configFactoryDefault();
-
-        /* Configure Sensor Source for Primary PID. */
-        talonFX.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, Constants.k_PIDLoopIDX,
-            Constants.k_timeoutMS);
-
-        /* Configure TalonFX to drive forward when LED is green. */
-        talonFX.setInverted(setInverted);
-        /* Configure TalonFX's sensor to increment its value as it moves forward. */
-        talonFX.setSensorPhase(setSensorPhase);
-        
-        /**
-         * Configure the nominal and peak output forward/reverse.
-         * 
-         * Nominal Output: minimal/weakest motor output allowed during closed-loop. Peak
-         * Output: maximal/strongest motor output allowed during closed-loop.
-         */
-        talonFX.configNominalOutputForward(0, Constants.k_timeoutMS);
-        talonFX.configNominalOutputReverse(0, Constants.k_timeoutMS);
-        talonFX.configPeakOutputForward(1, Constants.k_timeoutMS);
-        talonFX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
-
-        /* Set the Velocity gains (FPID) in slot0. */
-        talonFX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
-        talonFX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
-        talonFX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
-        talonFX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
-        talonFX.config_kD(Constants.k_slotIDX, kD, Constants.k_timeoutMS);
-
-        /**
-         * Reset/zero the TalonFX's sensor. Will be required for implementation into
-         * chassis (position considered), but not launcher (velocity only).
-         */
-        talonFX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
+      /* Set acceleration and cruise velocity for Motion Magic. */
+      talonSRX.configMotionCruiseVelocity(kCruiseVelocity, Constants.k_timeoutMS);
+      talonSRX.configMotionAcceleration(kAcceleration, Constants.k_timeoutMS);
     }
 
-    public static void configureTalonSRX(WPI_TalonSRX talonSRX, boolean controlMode, FeedbackDevice feedbackDevice,
-    boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD, int kCruiseVelocity,
-    int kAcceleration, boolean resetPos)  
+    /* Reset/zero the TalonSRX's sensor. */
+    if (resetPos)
     {
-        //Factory default to reset TalonSRX and prevent unexpected behavior.
-        talonSRX.configFactoryDefault();
-    
-        // Configure Sensor Source for Primary PID.
-        talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
-    
-        // Configure TalonSRX to drive forward when LED is green.
-        talonSRX.setInverted(setInverted);
-    
-        // Configure TalonSRX's sensor to increment its value as it moves forward.
-        talonSRX.setSensorPhase(setSensorPhase);
-    
-        // Determine if the internal PID is being used
-        if (controlMode)
-        {
-           /* Set relevant frame periods (Base_PIDF0 and MotionMagic) to periodic rate
-           * (10ms).*/
-          talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.k_timeoutMS);
-          talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.k_timeoutMS);
-        }
-    
-        /**
-         * Configure the nominal and peak output forward/reverse.
-         * 
-         * Nominal Output: minimal/weakest motor output allowed during closed-loop. Peak
-         * Output: maximal/strongest motor output allowed during closed-loop.
-         */
-        talonSRX.configNominalOutputForward(0, Constants.k_timeoutMS);
-        talonSRX.configNominalOutputReverse(0, Constants.k_timeoutMS);
-        talonSRX.configPeakOutputForward(1, Constants.k_timeoutMS);
-        talonSRX.configPeakOutputReverse(-1, Constants.k_timeoutMS);
-    
-        /* Set Motion Magic/Velocity gains (FPID) in slot0. */
-        talonSRX.selectProfileSlot(Constants.k_slotIDX, Constants.k_PIDLoopIDX);
-        talonSRX.config_kF(Constants.k_slotIDX, kF, Constants.k_timeoutMS);
-        talonSRX.config_kP(Constants.k_slotIDX, kP, Constants.k_timeoutMS);
-        talonSRX.config_kI(Constants.k_slotIDX, kI, Constants.k_timeoutMS);
-        talonSRX.config_kD(Constants.k_slotIDX, kD, Constants.k_timeoutMS);
-    
-        // Determine if the internal PID is being used
-        if (controlMode)
-        {
-          /* Set acceleration and cruise velocity for Motion Magic. */
-          talonSRX.configMotionCruiseVelocity(kCruiseVelocity, Constants.k_timeoutMS);
-          talonSRX.configMotionAcceleration(kAcceleration, Constants.k_timeoutMS);
-        }
-    
-        /* Reset/zero the TalonSRX's sensor. */
-        if (resetPos)
-        {
-          talonSRX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
-        }
-      }
+      talonSRX.setSelectedSensorPosition(0, Constants.k_PIDLoopIDX, Constants.k_timeoutMS);
+    }
+  }
     
    /* Convert RPM to units/100ms for TalonSRX/TalonFX to use for ControlMode.Velocity.
    * @param rpm is desired revolutions per minute.

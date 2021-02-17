@@ -7,6 +7,11 @@ public class Constants
 
     //region CAN IDs
 
+    //Chamber motors IDs
+    public static final int chamberDriveID                                      = 0;
+    public static final int chamberExtenderPortA                                = 0;
+    public static final int chamberExtenderPortB                                = 0;
+
     //Chassis motor IDs
     public static final int frontRightAngleID                                   = 13;
     public static final int frontRightSpeedID                                   = 12;
@@ -30,20 +35,26 @@ public class Constants
 
     //region Ports
 
-    public static final int driverJoystickPort                                  = 0;
+    public static final int driverJoystickPort                                        = 0;
 
     //Intake
-    public static final int intakeExtenderPortA                                 = 1;
-    public static final int intakeExtenderPortB                                 = 2;
-    public static final int intakeMotorTPR                                      = 0;
+    public static final int intakeExtenderPortA                                       = 1;
+    public static final int intakeExtenderPortB                                       = 2;
+    public static final int intakeMotorTPR                                            = 0;
     
     //endregion
 
     //region PID Values
     
-    public static final int k_PIDLoopIDX                                      = 0;
-    public static final int k_slotIDX                                         = 0;
-    public static final int k_timeoutMS                                       = 30;
+    public static final int k_PIDLoopIDX                                             = 0;
+    public static final int k_slotIDX                                                = 0;
+    public static final int k_timeoutMS                                              = 30;
+
+    //Chamber PIDs
+    public static final int chamberP                                                 = 0;
+    public static final int chamberI                                                 = 0; 
+    public static final int chamberD                                                 = 0;
+    public static final int chamberF                                                 = 0;
 
     //Intake PIDs
     public static final int intakeWheelP                                             = 0;
