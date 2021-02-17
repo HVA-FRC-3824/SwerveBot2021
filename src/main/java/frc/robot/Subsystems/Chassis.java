@@ -1,54 +1,48 @@
 package frc.robot.Subsystems;
 
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.*;
-import edu.wpi.first.wpilibj.trajectory.*;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
 public class Chassis extends SubsystemBase {
 
     // region variables
 
-    private AHRS m_ahrs;
+    public  AHRS m_ahrs;
 
     // region Auto
-
-    private SwerveDriveOdometry m_swerveDriveOdometry;
-    private SwerveDriveKinematics m_swerveDriveKinematics;
 
     // endregion
 
     // region motors
     private WPI_TalonFX m_angleMotorFrontRight;
     private WPI_TalonFX m_speedMotorFrontRight;
+    private SwerveModuleState m_frontRightState;
 
     private WPI_TalonFX m_angleMotorFrontLeft;
     private WPI_TalonFX m_speedMotorFrontLeft;
+    private SwerveModuleState m_frontLeftState;
 
     private WPI_TalonFX m_angleMotorBackLeft;
     private WPI_TalonFX m_speedMotorBackLeft;
+    private SwerveModuleState m_backLeftState;
 
     private WPI_TalonFX m_angleMotorBackRight;
     private WPI_TalonFX m_speedMotorBackRight;
+    private SwerveModuleState m_backRightState;
+
+    public  SwerveDriveOdometry m_swerveDriveOdometry;
+    private SwerveDriveKinematics m_swerveDriveKinematics;
 
     // [Speed, Angle, Previous Angle, Offset]
     private double[] frontRight = { 0, 0, 0, 0 };
@@ -62,6 +56,8 @@ public class Chassis extends SubsystemBase {
 
     // region methods
 
+
+    
     // Takes input from analog sticks and convert it into turn and x,y velocities
     // for the wheels
     public void convertSwerveValues(double x1, double y1, double x2) {
@@ -247,8 +243,11 @@ public class Chassis extends SubsystemBase {
         m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_swerveDriveKinematics = new SwerveDriveKinematics();
-        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, Rotation2d.fromDegrees(getHeading()));
+        //Module state setting
+        m_frontRightState = new SwerveModuleState(frontRight[0], Rotation2d.fromDegrees(frontRight[1]* 180/Math.PI)); //TODO add rpm to mps method
+        m_frontLeftState = new SwerveModuleState(frontLeft[0], Rotation2d.fromDegrees(frontLeft[1]* 180/Math.PI));
+        m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
+        m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
 
         // reset encoders and gyro to ensure autonomous path following is correct
 
@@ -262,6 +261,19 @@ public class Chassis extends SubsystemBase {
             System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
         }
 
+        //Instantiating the Swerve Kinematics & Odometry
+        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.frontRightLocationM, Constants.frontLeftLocationM, 
+                                    Constants.backLeftLocationM, Constants.backRightLocationM);
+        m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
+
+    }
+
+    public void updateOdometry() 
+    {
+    //get gyro angle. Negate values to match WPILib convention
+    var gyroAngle = Rotation2d.fromDegrees(-m_ahrs.getAngle());
+    // m_pose = m_swerveDriveOdometry.update(gyroAngle, )
+    //Update odometry
     }
 
     //endregion

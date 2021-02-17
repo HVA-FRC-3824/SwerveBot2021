@@ -6,56 +6,52 @@ import frc.robot.Commands.LauncherSetAngle;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Launcher extends SubsystemBase
 {
     
-    private WPI_TalonFX m_topRightWheel;
-    private WPI_TalonFX m_topLeftWheel;
-    private WPI_TalonFX m_bottomWheel;
+    private WPI_TalonSRX m_topRightWheel;
+    private WPI_TalonSRX m_topLeftWheel;
+    private WPI_TalonSRX m_bottomWheel;
   
     private WPI_TalonSRX m_pivot;
     private AnalogInput m_pivotFeedback;
 
     public Launcher()
     {
-        m_topRightWheel = new WPI_TalonFX(Constants.launcherTopRightMotorID);
-        RobotContainer.configureTalonFX(m_topRightWheel, false, false, Constants.launcherTopRightMotorID, Constants.launcherTopRightMotorID,
-                                        Constants.launcherTopRightMotorID, Constants.launcherTopRightMotorID);
-    
-        m_topLeftWheel = new WPI_TalonFX(Constants.launcherTopLeftMotorID);
-        RobotContainer.configureTalonFX(m_topLeftWheel, false, false, Constants.launcherTopLeftMotorID, Constants.launcherTopLeftMotorID,
-                                        Constants.launcherTopLeftMotorID, Constants.launcherTopLeftMotorID);
+      
+      //region Instantiate motors
 
-        m_bottomWheel = new WPI_TalonFX(Constants.launcherBottomWheelID);
-        RobotContainer.configureTalonFX(m_bottomWheel, false, false, Constants.launcherBottomWheelID, Constants.launcherBottomWheelID,
-                                        Constants.launcherBottomWheelID, Constants.launcherBottomWheelID);
-    
-        m_pivot = new WPI_TalonSRX(Constants.launcherPivotID);
-        RobotContainer.configureTalonSRX(m_pivot, false, FeedbackDevice.Analog, false, false, 
-                                         0.0, 0.0, 0.0, 0.0, 0, 0, false);
+      m_topRightWheel = new WPI_TalonSRX(Constants.launcherTopRightID);
+      RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+
+      m_topLeftWheel = new WPI_TalonSRX(Constants.launcherTopLeftID);
+      RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+
+      m_bottomWheel = new WPI_TalonSRX(Constants.launcherBottomID);
+      RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+      
+      //endregion
+
     }
 
    /* Methods for Robot.java to get TalonFX/TalonSRX objects to pass to the SetPIDValues command to configure PIDs via SmartDashboard.
    * @return TalonFX/TalonSRX object to be configured.
    */
-  public WPI_TalonFX getTopRightWheelTalonFX()
+  public WPI_TalonSRX getTopRightWheelTalonFX()
   {
     return m_topRightWheel;
   }
-  public WPI_TalonFX getTopLeftWheelTalonFX()
+  public WPI_TalonSRX getTopLeftWheelTalonFX()
   {
     return m_topLeftWheel;
   }
-  public WPI_TalonFX getBottomWheelTalonFX()
+  public WPI_TalonSRX getBottomWheelTalonFX()
   {
     return m_bottomWheel;
   }
@@ -83,7 +79,7 @@ public class Launcher extends SubsystemBase
    * @param rpm is converted to a velocity (units/100ms) for the launcher wheels PID to be set to.*/
   public void setTopLeftWheelRPM(int rpm)
   {
-    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
+    m_topLeftWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
   }
   public void setTopWheelRPM(int rpm)
   {

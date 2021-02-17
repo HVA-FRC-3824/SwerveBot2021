@@ -1,8 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 public class Constants 
 {
@@ -53,6 +51,13 @@ public class Constants
     public static final int intakeWheelD                                             = 0;
     public static final int intakeWheelF                                             = 0;
 
+    //Launcher PIDs
+
+    public static final int launcherP                                                = 0;
+    public static final int launcherI                                                = 0;
+    public static final int launcherD                                                = 0;
+    public static final int launcherF                                                = 0;
+
     //endregion
 
     //region Motor constants
@@ -62,19 +67,24 @@ public class Constants
     public static final int    motorTPR                                            = 2048; //ticks per revolution
 
     //Launcher motors
-    public static final int    launcherRPMErrorThreshold                   = 500;
 
-    public static final int    launcherPivotMinADC                         = 1700;
-    public static final int    launcherPivotMaxADC                         = 3600;
-    public static final double launcherPivotJogMagnitude                   = 0.25;
-    public static final double launcherPivotErrorThreshold                 = 0.5;
+    public static final int launcherTopRightID                                     = 0; //TODO implement correct values
+    public static final int launcherTopLeftID                                      = 0;
+    public static final int launcherBottomID                                       = 0;
 
-    public static final int    launcherPivotADCThreshold                   = 50;
-    public static final double launcherPivotAngleP                         = 0.005;
-    public static final double launcherPivotAngleMin                       = 0.02;
+    public static final int    launcherRPMErrorThreshold                           = 500;
+
+    public static final int    launcherPivotMinADC                                 = 1700;
+    public static final int    launcherPivotMaxADC                                 = 3600;
+    public static final double launcherPivotJogMagnitude                           = 0.25;
+    public static final double launcherPivotErrorThreshold                         = 0.5;
+
+    public static final int    launcherPivotADCThreshold                           = 50;
+    public static final double launcherPivotAngleP                                 = 0.005;
+    public static final double launcherPivotAngleMin                               = 0.02;
   
-    public static final double launcherAimVisionP                          = 0.07;
-    public static final double launcherAimVisionMin                        = 0.03;
+    public static final double launcherAimVisionP                                  = 0.07;
+    public static final double launcherAimVisionMin                                = 0.03;
 
     //endregion
 
@@ -84,13 +94,19 @@ public class Constants
 
     //region Gyro
 
-    public static final boolean k_gyroReversed                                     = true;
+    public static final boolean k_gyroReversed                                    = true;
 
     //endregion
 
-    //region Speeds
+    //region Speeds and Measurements
     
-    public static final float   autonomousPathSpeed                              = 3;
+    public static final int    autonomousPathSpeed                                = 3;
+
+    //location of motors relative to the center
+    public static final Translation2d frontRightLocationM                      = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d frontLeftLocationM                       = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d backLeftLocationM                        = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d backRightLocationM                       = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
 
     //endregion
 
