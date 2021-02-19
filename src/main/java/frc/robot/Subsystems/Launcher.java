@@ -27,13 +27,13 @@ public class Launcher extends SubsystemBase
       
       //region Instantiate motors
 
-      m_topRightWheel = new WPI_TalonSRX(Constants.launcherTopRightID);
+      m_topRightWheel = new WPI_TalonSRX(Constants.launcherTopRightMotorID);
       RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
 
-      m_topLeftWheel = new WPI_TalonSRX(Constants.launcherTopLeftID);
+      m_topLeftWheel = new WPI_TalonSRX(Constants.launcherTopLeftMotorID);
       RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
 
-      m_bottomWheel = new WPI_TalonSRX(Constants.launcherBottomID);
+      m_bottomWheel = new WPI_TalonSRX(Constants.launcherBottomMotorID);
       RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
       
       //endregion

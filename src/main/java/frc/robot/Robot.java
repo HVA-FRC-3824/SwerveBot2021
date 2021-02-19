@@ -18,9 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
 
   public static RobotContainer m_robotContainer;
 
@@ -68,7 +65,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() 
   {
-    RobotContainer.m_chassis.updateOdometry();
+    // RobotContainer.m_chassis.updateOdometry();
+    RobotContainer.m_chassis.calculatePIDs();
   }
 
   /** This function is called once when teleop is enabled. */
