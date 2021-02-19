@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 
 public class Constants 
 {
@@ -23,9 +24,9 @@ public class Constants
     public static final int backRightSpeedID                                    = 2;
 
     //Launcher motor IDs
-    public static final int launcherTopRightMotorID                             = 25;
+    public static final int launcherTopRightMotorID                             = 25; //TODO find right values for motor CAN IDs
     public static final int launcherTopLeftMotorID                              = 9;
-    public static final int launcherBottomWheelID                               = 10;
+    public static final int launcherBottomMotorID                               = 10;
     public static final int launcherPivotID                                     = 11;
 
     //Intake motor IDs
@@ -38,9 +39,12 @@ public class Constants
     public static final int driverJoystickPort                                        = 0;
 
     //Intake
-    public static final int intakeExtenderPortA                                       = 1;
-    public static final int intakeExtenderPortB                                       = 2;
-    public static final int intakeMotorTPR                                            = 0;
+    public static final int intakeLeftExtenderPortA                                       = 1;
+    public static final int intakeLeftExtenderPortB                                       = 2;
+    public static final int intakeRightExtenderPortA                                      = 3;
+    public static final int intakeRightExtenderPortB                                      = 4;
+
+    public static final int intakeMotorTPR                                                = 0;
     
     //endregion
 
@@ -69,19 +73,29 @@ public class Constants
     public static final int launcherD                                                = 0;
     public static final int launcherF                                                = 0;
 
+    // X Controller PIDs
+
+    public static final double xControllerkP                                         = 0;
+    public static final double xControllerkI                                         = 0;
+    public static final double xControllerkD                                         = 0;
+    
+    // Y Controller PIDs
+
+    public static final double yControllerkP                                         = 0;
+    public static final double yControllerkI                                         = 0;
+    public static final double yControllerkD                                         = 0;
+
+    // Angle Controller PIDs
+    
+    public static final double angleControllerkP                                         = 0;
+    public static final double angleControllerkI                                         = 0;
+    public static final double angleControllerkD                                         = 0;
+
     //endregion
 
-    //region Motor constants
-
-    //Swerve motors
-    public static final double swerveDriveMaxVoltage                               = 4.95;
-    public static final int    motorTPR                                            = 2048; //ticks per revolution
+    //region Subsystem Specific Constants
 
     //Launcher motors
-
-    public static final int launcherTopRightID                                     = 0; //TODO implement correct values
-    public static final int launcherTopLeftID                                      = 0;
-    public static final int launcherBottomID                                       = 0;
 
     public static final int    launcherRPMErrorThreshold                           = 500;
 
@@ -96,6 +110,7 @@ public class Constants
   
     public static final double launcherAimVisionP                                  = 0.07;
     public static final double launcherAimVisionMin                                = 0.03;
+    
 
     //endregion
 
@@ -109,9 +124,14 @@ public class Constants
 
     //endregion
 
-    //region Speeds and Measurements
+    //region Constraints
     
     public static final int    autonomousPathSpeed                                = 3;
+
+    //swerve
+    public static final double swerveDriveMaxVoltage                               = 4.95;
+    public static final int    motorTPR                                            = 2048; //ticks per revolution
+    public static final Constraints angleControllerConstraints                     = new Constraints(0.0, 0.0);
 
     //location of motors relative to the center
     public static final Translation2d frontRightLocationM                      = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y

@@ -15,13 +15,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase
 {
-  private DoubleSolenoid m_extender;
+  private DoubleSolenoid m_leftExtender;
+  private DoubleSolenoid m_rightExtender;
 
   private WPI_TalonSRX m_wheelIntake;
 
   public Intake()
   {
-    m_extender = new DoubleSolenoid(Constants.intakeExtenderPortA, Constants.intakeExtenderPortB);
+    
+    m_leftExtender = new DoubleSolenoid(Constants.intakeLeftExtenderPortA, Constants.intakeLeftExtenderPortB);
+    m_rightExtender = new DoubleSolenoid(Constants.intakeRightExtenderPortA, Constants.intakeRightExtenderPortB);
 
     m_wheelIntake = new WPI_TalonSRX(Constants.intakeMotorID);
     RobotContainer.configureTalonSRX(m_wheelIntake, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, 
@@ -52,11 +55,19 @@ public class Intake extends SubsystemBase
    * Gets the opposite value of the current solenoid value for toggling extender.
    * @return the solenoid value the extender should be set to in order to toggle.
    */
-  private Value getExtenderValueToToggle()
+  private Value getLeftExtenderValueToToggle()
   {
-    if (m_extender.get() == Value.kForward)
+    if (m_leftExtender.get() == Value.kForward)
       return Value.kReverse;
     else
+      return Value.kForward;
+  }
+
+  private Value getRightExtenderValueToToggle()
+  {
+    if (m_rightExtender.get() == Value.kForward)
+      return Value.kReverse;
+    else 
       return Value.kForward;
   }
 
@@ -65,7 +76,8 @@ public class Intake extends SubsystemBase
    */
   public void toggleExtender()
   {
-    m_extender.set(this.getExtenderValueToToggle());
+    m_leftExtender.set(this.getLeftExtenderValueToToggle());
+    m_rightExtender.set(this.getRightExtenderValueToToggle());
   }
 
   /**
@@ -73,11 +85,13 @@ public class Intake extends SubsystemBase
    */
   public void extendExtender()
   {
-    m_extender.set(Value.kReverse);
+    m_leftExtender.set(Value.kReverse);
+    m_rightExtender.set(Value.kReverse);
   }
   public void retractExtender()
   {
-    m_extender.set(Value.kForward);
+    m_leftExtender.set(Value.kForward);
+    m_rightExtender.set(Value.kForward);
   }
 
   /**
