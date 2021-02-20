@@ -73,23 +73,13 @@ public class Constants
     public static final int launcherD                                                = 0;
     public static final int launcherF                                                = 0;
 
-    // X Controller PIDs
+    // Speed Controller PIDs
 
-    public static final double xControllerkP                                         = 0;
-    public static final double xControllerkI                                         = 0;
-    public static final double xControllerkD                                         = 0;
-    
-    // Y Controller PIDs
-
-    public static final double yControllerkP                                         = 0;
-    public static final double yControllerkI                                         = 0;
-    public static final double yControllerkD                                         = 0;
+    public static final double speedControllerkP                                         = 0;
 
     // Angle Controller PIDs
     
     public static final double angleControllerkP                                         = 0;
-    public static final double angleControllerkI                                         = 0;
-    public static final double angleControllerkD                                         = 0;
 
     //endregion
 
@@ -120,24 +110,29 @@ public class Constants
 
     //region Gyro
 
-    public static final boolean k_gyroReversed                                    = true;
+    public static final boolean k_gyroReversed                                     = true;
 
     //endregion
 
     //region Constraints
     
-    public static final int    autonomousPathSpeed                                = 3;
+    public static final int    autonomousPathSpeed                                 = 3;
+    
+    public static final double intakeMotorPower                                    = 0.5;
 
-    //swerve
+    //Speeds and Constraints
     public static final double swerveDriveMaxVoltage                               = 4.95;
-    public static final int    motorTPR                                            = 2048; //ticks per revolution
+    public static final double maxAccelerationMPS2                                 = 3.0; //meters per second squared
+    public static final int swerveGearRatio                                        = 3 / 20; //wheel spins per angle motor spin
+    public static final int motorTPR                                               = 2048; //ticks per revolution of motor
+    public static final int swerveTPR                                              = motorTPR / swerveGearRatio; //motors ticks per revolution of wheel
     public static final Constraints angleControllerConstraints                     = new Constraints(0.0, 0.0);
 
     //location of motors relative to the center
-    public static final Translation2d frontRightLocationM                      = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
-    public static final Translation2d frontLeftLocationM                       = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
-    public static final Translation2d backLeftLocationM                        = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
-    public static final Translation2d backRightLocationM                       = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d frontRightLocationM                          = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d frontLeftLocationM                           = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d backLeftLocationM                            = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d backRightLocationM                           = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
 
     //endregion
 

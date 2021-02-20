@@ -1,26 +1,40 @@
 package frc.robot.Subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.OI;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.*;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 public class Chassis extends SubsystemBase {
 
     // region variables
 
-    public  AHRS m_ahrs;
+    public AHRS m_ahrs;
 
     // region Auto
 
@@ -107,10 +121,9 @@ public class Chassis extends SubsystemBase {
 
         // SwerveModuleState[] moduleStates = m_swerveDriveKinematics.toSwerveModuleStates(adjustedSpeeds);
 
-        SwerveModuleState frontLeft = moduleStates[0];
-        SwerveModuleState frontRight = moduleStates[1];
-        SwerveModuleState backLeft = moduleStates[2];
-        SwerveModuleState backRight = moduleStates[3];
+        m_frontRightState = moduleStates[0];
+
+        
 
         // Try to instantiate the navX gyro with exception
         try {
@@ -120,10 +133,6 @@ public class Chassis extends SubsystemBase {
         }
 
         // Instantiating PID Controllers
-        m_xController = new PIDController(Constants.xControllerkP, Constants.xControllerkI, Constants.xControllerkD);
-        m_yController = new PIDController(Constants.yControllerkP, Constants.yControllerkI, Constants.yControllerkD);
-        m_angleController = new ProfiledPIDController(Constants.angleControllerkP, Constants.angleControllerkI, 
-                            Constants.angleControllerkD, Constants.angleControllerConstraints);
         m_holonomicController = new HolonomicDriveController(m_xController, m_yController, m_angleController);
 
         // Reset encoders and gyro to ensure autonomous path following is correct
@@ -239,13 +248,13 @@ public class Chassis extends SubsystemBase {
             backRight[3] += 2 * Math.PI;
 
         drive(m_speedMotorFrontRight, m_angleMotorFrontRight, frontRight[0],
-                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.motorTPR);
+                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.swerveTPR);
         drive(m_speedMotorFrontLeft, m_angleMotorFrontLeft, frontLeft[0],
-                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.motorTPR);
+                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.swerveTPR);
         drive(m_speedMotorBackLeft, m_angleMotorBackLeft, backLeft[0],
-                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.motorTPR);
+                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.swerveTPR);
         drive(m_speedMotorBackRight, m_angleMotorBackRight, backRight[0],
-                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.motorTPR);
+                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.swerveTPR);
 
     }
 
@@ -266,6 +275,36 @@ public class Chassis extends SubsystemBase {
         System.out.println("Angle: " + angle);
     }
 
+    public SequentialCommandGroup generateSwerveCommand(Pose2d startingPose, List<Translation2d> wayPoints, 
+                                                        Pose2d endingPose, double maxVelocity, boolean isReversed)
+    {
+        //Voltage constraint so never telling robot to move faster than it is capable of achieving.
+        var autoVelocityConstraint =
+            new SwerveDriveKinematicsConstraint(m_swerveDriveKinematics, Math.abs(maxVelocity));
+        
+        //Configuration for trajectory that wraps path constraints.
+        TrajectoryConfig trajConfig =
+            new TrajectoryConfig(maxVelocity, Constants.maxAccelerationMPS2)
+            //Add kinematics to track robot speed and ensure max speed is obeyed.
+            .setKinematics(m_swerveDriveKinematics)
+            //Apply voltage constraint created above.
+            .addConstraint(autoVelocityConstraint)
+            //Reverse the trajectory based on passed in parameter.
+            .setReversed(isReversed);
+
+        //Generate trajectory: initialPose, interiorWaypoints, endPose, trajConfig
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(startingPose, wayPoints, endingPose, trajConfig);
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, 
+            RobotContainer.m_chassis::getPose, m_swerveDriveKinematics, 
+            new PIDController(Constants.speedControllerkP, 0, 0), 
+            new PIDController(Constants.speedControllerkP, 0, 0),
+            new ProfiledPIDController(Constants.angleControllerkP, 0, 0, Constants.angleControllerConstraints), 
+            RobotContainer.m_chassis::setModuleStates, RobotContainer.m_chassis);
+            
+        return swerveControllerCommand.andThen(new InstantCommand(() -> RobotContainer.m_chassis.convertSwerveValues(0, 0, 0)));
+    }
+
     public WPI_TalonFX getMotor(WPI_TalonFX motor)
     {
         return motor;
@@ -274,6 +313,12 @@ public class Chassis extends SubsystemBase {
     public double getHeading()
     {
         return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.k_gyroReversed ? -1.0 : 1.0);
+    }
+
+    
+    public Pose2d getPose()
+    {
+        return m_swerveDriveOdometry.getPoseMeters();
     }
 
     public void resetEncoders()
@@ -287,6 +332,12 @@ public class Chassis extends SubsystemBase {
         m_angleMotorBackRight.setSelectedSensorPosition(0);
         m_speedMotorBackRight.setSelectedSensorPosition(0);
     }
+
+    public void setModuleStates(SwerveModuleState[] modState)
+    {
+        moduleStates = modState;
+    }
+
 
     // public void updateOdometry() 
     // {
