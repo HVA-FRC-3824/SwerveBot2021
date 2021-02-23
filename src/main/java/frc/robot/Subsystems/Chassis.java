@@ -122,6 +122,9 @@ public class Chassis extends SubsystemBase {
         // SwerveModuleState[] moduleStates = m_swerveDriveKinematics.toSwerveModuleStates(adjustedSpeeds);
 
         m_frontRightState = moduleStates[0];
+        m_frontLeftState  = moduleStates[1];
+        m_backLeftState   = moduleStates[2];
+        m_backRightState  = moduleStates[3];
 
         
 
@@ -321,6 +324,7 @@ public class Chassis extends SubsystemBase {
         return m_swerveDriveOdometry.getPoseMeters();
     }
 
+    //Resets encoders
     public void resetEncoders()
     {
         m_angleMotorFrontRight.setSelectedSensorPosition(0);
