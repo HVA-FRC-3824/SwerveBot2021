@@ -25,18 +25,18 @@ public class Launcher extends SubsystemBase
     public Launcher()
     {
       
-      //region Instantiate motors
+      // Region Instantiate motors
 
-      m_topRightWheel = new WPI_TalonSRX(Constants.launcherTopRightMotorID);
-      RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+      m_topRightWheel = new WPI_TalonSRX(Constants.LAUNCHER_TOP_RIGHT_MOTOR_ID);
+      RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
 
-      m_topLeftWheel = new WPI_TalonSRX(Constants.launcherTopLeftMotorID);
-      RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+      m_topLeftWheel = new WPI_TalonSRX(Constants.LAUNCHER_TOP_LEFT_MOTOR_ID);
+      RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
 
-      m_bottomWheel = new WPI_TalonSRX(Constants.launcherBottomMotorID);
-      RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+      m_bottomWheel = new WPI_TalonSRX(Constants.LAUNCHER_BOTTOM_MOTOR_ID);
+      RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
       
-      //endregion
+      // Endregion
 
     }
 
@@ -79,18 +79,18 @@ public class Launcher extends SubsystemBase
    * @param rpm is converted to a velocity (units/100ms) for the launcher wheels PID to be set to.*/
   public void setTopLeftWheelRPM(int rpm)
   {
-    m_topLeftWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
+    m_topLeftWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.MOTOR_TPR));
   }
   public void setTopWheelRPM(int rpm)
   {
-    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
+    m_topRightWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.MOTOR_TPR));
   }
   public void setBottomWheelRPM(int rpm)
   {
-    m_bottomWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.motorTPR));
+    m_bottomWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.MOTOR_TPR));
   }
 
-  //Sets power of linear actuator for launcher pivot angle.
+  // Sets power of linear actuator for launcher pivot angle.
   public void setPivotPower(double power)
   {
     if ((this.getPivotADC() <= 2000 && power <= 0.0) || (this.getPivotADC() >= 3500 && power >= 0.0))

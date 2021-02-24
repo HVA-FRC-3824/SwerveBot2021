@@ -32,15 +32,15 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 public class Chassis extends SubsystemBase {
 
-    // region variables
+    // Region Variables
 
     public AHRS m_ahrs;
 
-    // region Auto
+    // Region Auto
 
-    // endregion
+    // Endregion
 
-    // region motors
+    // Region Motors
     private WPI_TalonFX m_angleMotorFrontRight;
     private WPI_TalonFX m_speedMotorFrontRight;
 
@@ -73,47 +73,46 @@ public class Chassis extends SubsystemBase {
     private double[] backLeft = { 0, 0, 0, 0 };
     private double[] backRight = { 0, 0, 0, 0 };
 
-    // endregion
+    // Endregion
 
-    // endregion
+    // Endregion
 
-    // region methods
-
+// Main Method
     public Chassis() 
     {
 
         // Instantiating Drivetrain objects
 
-        m_angleMotorFrontRight = new WPI_TalonFX(Constants.frontRightAngleID);
+        m_angleMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_ANGLE_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_speedMotorFrontRight = new WPI_TalonFX(Constants.frontRightSpeedID);
+        m_speedMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftAngleID);
+        m_angleMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_ANGLE_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.frontLeftSpeedID);
+        m_speedMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_angleMotorBackLeft = new WPI_TalonFX(Constants.backLeftAngleID);
+        m_angleMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_ANGLE_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_speedMotorBackLeft = new WPI_TalonFX(Constants.backLeftSpeedID);
+        m_speedMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_angleMotorBackRight = new WPI_TalonFX(Constants.backRightAngleID);
+        m_angleMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_ANGLE_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_speedMotorBackRight = new WPI_TalonFX(Constants.backRightSpeedID);
+        m_speedMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        //Instantiating the Swerve Kinematics & Odometry
-        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.frontRightLocationM, Constants.frontLeftLocationM, 
-                                    Constants.backLeftLocationM, Constants.backRightLocationM);
+        // Instantiating the Swerve Kinematics & Odometry
+        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.FRONT_RIGHT_LOCATION_M, Constants.FRONT_LEFT_LOCATOIN_M, 
+                                    Constants.BACK_LEFT_LOCATION_M, Constants.BACK_RIGHT_LOCATION_M);
         m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
 
-        //Module state setting
+        // Module state setting
         m_frontRightState = new SwerveModuleState(frontRight[0], Rotation2d.fromDegrees(frontRight[1]* 180/Math.PI)); //TODO add rpm to mps method
         m_frontLeftState = new SwerveModuleState(frontLeft[0], Rotation2d.fromDegrees(frontLeft[1]* 180/Math.PI));
         m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
@@ -142,12 +141,12 @@ public class Chassis extends SubsystemBase {
         this.resetEncoders();
         this.zeroHeading();
     }
-
-    public void calculatePIDs()
-    {
-        // m_speedMotorFrontRight.set(m_xController.calculate(Encoder.getDistance(), setpoint));
-    }
     
+    public void calculatePIDs() 
+    { 
+        // m_speedMotorFrontRight.set(m_xController.calculate(Encoder.getDistance(), setpoint)); 
+    } 
+
     // Takes input from analog sticks and convert it into turn and x,y velocities
     // for the wheels
     public void convertSwerveValues(double x1, double y1, double x2) 
@@ -215,7 +214,7 @@ public class Chassis extends SubsystemBase {
             backRight[0] = backRight[0] / highestSpeed;
         }
 
-        // update last angle
+        // Update last angle
         frontRight[2] = frontRight[1];
         frontLeft[2] = frontLeft[1];
         backLeft[2] = backLeft[1];
@@ -251,13 +250,13 @@ public class Chassis extends SubsystemBase {
             backRight[3] += 2 * Math.PI;
 
         drive(m_speedMotorFrontRight, m_angleMotorFrontRight, frontRight[0],
-                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.swerveTPR);
+                -(frontRight[1] + frontRight[3]) / (Math.PI * 2) * Constants.SWERVE_TPR);
         drive(m_speedMotorFrontLeft, m_angleMotorFrontLeft, frontLeft[0],
-                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.swerveTPR);
+                -(frontLeft[1] + frontLeft[3]) / (Math.PI * 2) * Constants.SWERVE_TPR);
         drive(m_speedMotorBackLeft, m_angleMotorBackLeft, backLeft[0],
-                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.swerveTPR);
+                -(backLeft[1] + backLeft[3]) / (Math.PI * 2) * Constants.SWERVE_TPR);
         drive(m_speedMotorBackRight, m_angleMotorBackRight, backRight[0],
-                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.swerveTPR);
+                -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.SWERVE_TPR);
 
     }
 
@@ -265,12 +264,12 @@ public class Chassis extends SubsystemBase {
     {
         speedMotor.set(speed * 0.8);
 
-        double setPoint = angle * (Constants.swerveDriveMaxVoltage * 1.5);
+        double setPoint = angle * (Constants.SWERVE_DRIVE_MAX_VOLTAGE * 1.5);
 
         if (setPoint < 0)
-            setPoint += Constants.swerveDriveMaxVoltage;
-        if (setPoint > Constants.swerveDriveMaxVoltage)
-            setPoint -= Constants.swerveDriveMaxVoltage;
+            setPoint += Constants.SWERVE_DRIVE_MAX_VOLTAGE;
+        if (setPoint > Constants.SWERVE_DRIVE_MAX_VOLTAGE)
+            setPoint -= Constants.SWERVE_DRIVE_MAX_VOLTAGE;
 
         angleMotor.set(TalonFXControlMode.Position, angle *0.8);
 
@@ -281,28 +280,28 @@ public class Chassis extends SubsystemBase {
     public SequentialCommandGroup generateSwerveCommand(Pose2d startingPose, List<Translation2d> wayPoints, 
                                                         Pose2d endingPose, double maxVelocity, boolean isReversed)
     {
-        //Voltage constraint so never telling robot to move faster than it is capable of achieving.
+        // Voltage constraint so never telling robot to move faster than it is capable of achieving.
         var autoVelocityConstraint =
             new SwerveDriveKinematicsConstraint(m_swerveDriveKinematics, Math.abs(maxVelocity));
         
-        //Configuration for trajectory that wraps path constraints.
+        // Configuration for trajectory that wraps path constraints.
         TrajectoryConfig trajConfig =
-            new TrajectoryConfig(maxVelocity, Constants.maxAccelerationMPS2)
-            //Add kinematics to track robot speed and ensure max speed is obeyed.
+            new TrajectoryConfig(maxVelocity, Constants.MAX_ACCELERATION_MPS2)
+            // Add kinematics to track robot speed and ensure max speed is obeyed.
             .setKinematics(m_swerveDriveKinematics)
-            //Apply voltage constraint created above.
+            // Apply voltage constraint created above.
             .addConstraint(autoVelocityConstraint)
-            //Reverse the trajectory based on passed in parameter.
+            // Reverse the trajectory based on passed in parameter.
             .setReversed(isReversed);
 
-        //Generate trajectory: initialPose, interiorWaypoints, endPose, trajConfig
+        // Generate trajectory: initialPose, interiorWaypoints, endPose, trajConfig
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(startingPose, wayPoints, endingPose, trajConfig);
 
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, 
             RobotContainer.m_chassis::getPose, m_swerveDriveKinematics, 
-            new PIDController(Constants.speedControllerkP, 0, 0), 
-            new PIDController(Constants.speedControllerkP, 0, 0),
-            new ProfiledPIDController(Constants.angleControllerkP, 0, 0, Constants.angleControllerConstraints), 
+            new PIDController(Constants.SPEED_CONTROLLER_KP, 0, 0), 
+            new PIDController(Constants.SPEED_CONTROLLER_KP, 0, 0),
+            new ProfiledPIDController(Constants.SPEED_CONTROLLER_KP, 0, 0, Constants.ANGLE_CONTROLLER_CONSTRAINTS), 
             RobotContainer.m_chassis::setModuleStates, RobotContainer.m_chassis);
             
         return swerveControllerCommand.andThen(new InstantCommand(() -> RobotContainer.m_chassis.convertSwerveValues(0, 0, 0)));
@@ -315,7 +314,7 @@ public class Chassis extends SubsystemBase {
 
     public double getHeading()
     {
-        return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.k_gyroReversed ? -1.0 : 1.0);
+        return Math.IEEEremainder(m_ahrs.getAngle(), 360) * (Constants.K_GYRO_REVERSED ? -1.0 : 1.0);
     }
 
     
@@ -324,7 +323,7 @@ public class Chassis extends SubsystemBase {
         return m_swerveDriveOdometry.getPoseMeters();
     }
 
-    //Resets encoders
+    // Resets encoders
     public void resetEncoders()
     {
         m_angleMotorFrontRight.setSelectedSensorPosition(0);
@@ -343,20 +342,20 @@ public class Chassis extends SubsystemBase {
     }
 
 
-    // public void updateOdometry() 
+    // Public void updateOdometry() 
     // {
     // //get gyro angle. Negate values to match WPILib convention
     // var gyroAngle = Rotation2d.fromDegrees(-getHeading());
     // m_swerveDriveOdometry.update(gyroAngle, m_frontRightState, m_frontLeftState, m_backLeftState, m_backRightState);
-    // //Update odometry
+    // // Update odometry
     // }
 
-    //Reset gyro to zero the heading of the robot
+    // Reset gyro to zero the heading of the robot
     public void zeroHeading()
     {
         m_ahrs.reset();
         m_ahrs.setAngleAdjustment(0.0);
     }
-    //endregion
+    // Endregion
 
 } 

@@ -11,11 +11,12 @@ public class AutoNavSlalom extends SequentialCommandGroup
 {
 
     Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
-    //List<Translation2d> waypoints = List<>();
+    Pose2d endingPose = new Pose2d(0, 0, new Rotation2d(0));
+    // List<Translation2d> waypoints = List<>();
 
     public AutoNavSlalom()
     {
-        //follow path
+        // Follow path
         
     }
 }

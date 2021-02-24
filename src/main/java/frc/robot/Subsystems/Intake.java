@@ -23,13 +23,13 @@ public class Intake extends SubsystemBase
   public Intake()
   {
     
-    m_leftExtender = new DoubleSolenoid(Constants.intakeLeftExtenderPortA, Constants.intakeLeftExtenderPortB);
-    m_rightExtender = new DoubleSolenoid(Constants.intakeRightExtenderPortA, Constants.intakeRightExtenderPortB);
+    m_leftExtender = new DoubleSolenoid(Constants.INTAKE_LEFT_EXTENDER_PORT_A, Constants.INTAKE_LEFT_EXTENDER_PORT_B);
+    m_rightExtender = new DoubleSolenoid(Constants.INTAKE_RIGHT_EXTENDER_PORT_A, Constants.INTAKE_RIGHT_EXTENDER_PORT_B);
 
-    m_wheelIntake = new WPI_TalonSRX(Constants.intakeMotorID);
+    m_wheelIntake = new WPI_TalonSRX(Constants.INTAKE_MOTOR_ID);
     RobotContainer.configureTalonSRX(m_wheelIntake, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, 
-                                    Constants.intakeWheelF, Constants.intakeWheelP, 
-                                    Constants.intakeWheelI, Constants.intakeWheelD, 0, 0, true);
+                                    Constants.INTAKE_WHEEL_F, Constants.INTAKE_WHEEL_P, 
+                                    Constants.INTAKE_WHEEL_I, Constants.INTAKE_WHEEL_D, 0, 0, true);
 
     SmartDashboard.putData("RETRACT", new InstantCommand(() -> this.retractExtender()));
   }
@@ -109,6 +109,6 @@ public class Intake extends SubsystemBase
    */
   public void setWheelRPM(int rpm)
   {
-    m_wheelIntake.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.intakeMotorTPR));
+    m_wheelIntake.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.MOTOR_TPR));
   }
 }

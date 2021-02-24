@@ -14,19 +14,20 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Chamber extends SubsystemBase
 {
 
-    private WPI_TalonSRX m_drive;
+    private WPI_TalonSRX m_wheelMotor;
     
-    private DoubleSolenoid m_extender;
+    private DoubleSolenoid m_output;
 
     private Ultrasonic m_ballPos_entering;
     private Ultrasonic m_ballPos_exiting;
 
     public Chamber()
     {
-        m_drive = new WPI_TalonSRX(Constants.chamberDriveID);
-        RobotContainer.configureTalonSRX(m_drive, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.launcherF, Constants.launcherP, Constants.launcherI, Constants.launcherD, 0, 0, true);
+        m_wheelMotor = new WPI_TalonSRX(Constants.CHAMBER_WHEEL_ID);
+        RobotContainer.configureTalonSRX(m_wheelMotor, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, 
+                                        Constants.CHAMBER_F, Constants.CHAMBER_P, Constants.CHAMBER_I, Constants.CHAMBER_D, 0, 0, true);
 
-        m_extender = new DoubleSolenoid(Constants.chamberExtenderPortA, Constants.chamberExtenderPortB);
+        m_output = new DoubleSolenoid(Constants.CHAMBER_OUTPUT_PORT_A, Constants.CHAMBER_OUTPUT_PORT_B);
     
     }
 

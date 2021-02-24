@@ -8,12 +8,12 @@ public class OI
 
     public OI()
     {
-        m_driverJoystick = new Joystick(Constants.driverJoystickPort);
+        m_driverJoystick = new Joystick(Constants.DRIVER_JOYSTICK_PORT);
     }
 
     public void configureButtonBindings()
     {
-        //Chassis buttons
+        // Chassis buttons
         
         
     }

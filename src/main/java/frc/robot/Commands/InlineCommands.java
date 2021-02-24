@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class InlineCommands
 {
 
-    //Declare all inline commands
+    // Declare all inline commands
 
     //region Chassis inline commands
 
@@ -33,7 +33,7 @@ public class InlineCommands
     public InlineCommands()
     {
 
-        //Chassis commands instantiation;
+        // Chassis commands instantiation;
         m_driveWithJoystick = 
             new RunCommand(() -> 
             RobotContainer.m_chassis.convertSwerveValues    (

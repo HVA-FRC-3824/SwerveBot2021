@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
 
 public class AutoNavBarrel extends SequentialCommandGroup
 {
@@ -32,6 +33,7 @@ public class AutoNavBarrel extends SequentialCommandGroup
 
     public AutoNavBarrel()
     {
-        
+        // Follow path
+        RobotContainer.m_chassis.generateSwerveCommand(startingPose, waypoints, endingPose, 2.5, false);
     }
 }

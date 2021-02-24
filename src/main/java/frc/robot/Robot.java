@@ -1,6 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// The WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
 
   public static RobotContainer m_robotContainer;
 
+  private Command m_autonomousCommand;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -56,16 +57,19 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() 
   {
-    // RobotContainer.m_chassis.zeroHeading();
-    // RobotContainer.m_chassis.resetEncoders();
+    RobotContainer.m_chassis.zeroHeading();
+    RobotContainer.m_chassis.resetEncoders();
+
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    if (m_autonomousCommand != null)
+      m_autonomousCommand.schedule();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() 
   {
-    // RobotContainer.m_chassis.updateOdometry();
-    RobotContainer.m_chassis.calculatePIDs();
+
   }
 
   /** This function is called once when teleop is enabled. */
