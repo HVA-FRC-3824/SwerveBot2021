@@ -7,6 +7,7 @@ import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.WPI_AutoFeedEnable;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -31,4 +32,14 @@ public class Chamber extends SubsystemBase
     
     }
 
+    public void startUltrasonics()
+    {
+        m_ballPos_entering.setAutomaticMode(true);
+        m_ballPos_exiting.setAutomaticMode(true);
+    }
+
+    public void runChamber(double power)
+    {
+        m_wheelMotor.set(ControlMode.PercentOutput, power);
+    }
 }

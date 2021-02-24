@@ -17,7 +17,9 @@ public class InlineCommands
     //region Chassis inline commands
 
     //region variables
-
+    public final Command m_runChamber;
+    public final Command m_stopChamber;
+    
     public final Command m_driveWithJoystick;
     public final Command m_setHeading;
 
@@ -33,7 +35,14 @@ public class InlineCommands
     public InlineCommands()
     {
 
-        // Chassis commands instantiation;
+        // Chamber inline command instantiation
+        m_runChamber =
+            new InstantCommand(() -> RobotContainer.m_chamber.runChamber(Constants.CHAMBER_MOTOR_POWER));
+
+        m_stopChamber = 
+            new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0));
+
+        // Chassis commands instantiation
         m_driveWithJoystick = 
             new RunCommand(() -> 
             RobotContainer.m_chassis.convertSwerveValues    (

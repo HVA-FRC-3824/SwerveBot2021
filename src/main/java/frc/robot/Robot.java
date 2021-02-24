@@ -4,10 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -30,6 +28,8 @@ public class Robot extends TimedRobot {
 
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+
+    CameraServer.getInstance().startAutomaticCapture(0);
   }
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
@@ -45,14 +45,9 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
+   * You can set up different autonomous routes through the Java SmartDashboard and LabVIEW Dashboard,
+   * all you have to do is select the correct box in either SmartDashboard and LabVIEW to run the route.
+   * More routes can be added in the switch case in RobotContainer.
    */
   @Override
   public void autonomousInit() 
@@ -65,37 +60,19 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
   }
 
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() 
-  {
-
-  }
-
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() 
   {
+    if (m_autonomousCommand != null) m_autonomousCommand.cancel();
+    RobotContainer.m_limelight.setModeVision();
     RobotContainer.initializeDefaultCommands();
   }
 
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
-
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
-
-  /** This function is called periodically when disabled. */
-  @Override
-  public void disabledPeriodic() {}
-
-  /** This function is called once when test mode is enabled. */
-  @Override
-  public void testInit() {}
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
+  public void disabledInit() 
+  {
+    RobotContainer.m_limelight.turnOffLED();
+  }
 }

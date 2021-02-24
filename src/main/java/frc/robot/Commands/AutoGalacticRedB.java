@@ -12,15 +12,15 @@ import frc.robot.RobotContainer;
 
 public class AutoGalacticRedB extends SequentialCommandGroup
 {
+    //Creates path from a start point to an end point
     Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
+    Pose2d endingPose = new Pose2d(7.905	,	-0.65, new Rotation2d(0));
+
         List<Translation2d> waypoints = List.of(
-                                                  new Translation2d(0       ,        0),
-                                                  new Translation2d(1.552	,	-0.05),
+                                                  new Translation2d(1.552	,	-0.05 ),
                                                   new Translation2d(3.142	,	-1.565),
-                                                  new Translation2d(4.633	,	0.049),
-                                                  new Translation2d(7.905	,	-0.65)
+                                                  new Translation2d(4.633	,	0.049 )
                                                 );
-        Pose2d endingPose = new Pose2d(7.905	,	-0.65, new Rotation2d(0));
 
     public AutoGalacticRedB()
     {
@@ -30,12 +30,14 @@ public class AutoGalacticRedB extends SequentialCommandGroup
         // Start intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(Constants.INTAKE_MOTOR_POWER)),
 
-        //TODO Run chamber
+        //Run chamber
+        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(Constants.CHAMBER_MOTOR_POWER)),
 
         // Follow path to pick up balls
         RobotContainer.m_chassis.generateSwerveCommand(startingPose, waypoints, endingPose, 2.5, false),
 
-        //TODO Stop chamber
+        //Stop chamber
+        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0)),
 
         // Stop intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0)),

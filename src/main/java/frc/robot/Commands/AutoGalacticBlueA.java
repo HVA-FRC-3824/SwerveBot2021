@@ -12,16 +12,18 @@ import frc.robot.RobotContainer;
 
 public class AutoGalacticBlueA extends SequentialCommandGroup {
 
+    //Creates path from a start point to an end point
     Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
-    Pose2d endingPose = new Pose2d(0, 0, new Rotation2d(0));
-
+    Pose2d endingPose = new Pose2d(7.799,-0.37, new Rotation2d(0));
+    
     List<Translation2d> waypoints = List.of(
-        new Translation2d(     0        ,     0   ),
-        new Translation2d(     1.571	,	-0.792),
-        new Translation2d(     2.245	,	1.527 ),
-        new Translation2d(     4.212	,	1.008 ),
-        new Translation2d(     6.365	,	0.061)
-        );
+                                                new Translation2d(1.15	,	-0.123),
+                                                new Translation2d(2.344	,	-0.6),
+                                                new Translation2d(3.952	,	-0.717),
+                                                new Translation2d(4.373	,	0.458),
+                                                new Translation2d(4.756	,	1.596),
+                                                new Translation2d(6.16	,	0.792)
+                                            );
 
     public AutoGalacticBlueA()
     {
@@ -31,12 +33,15 @@ public class AutoGalacticBlueA extends SequentialCommandGroup {
         // Start intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(Constants.INTAKE_MOTOR_POWER)),
 
-        //TODO Run chamber
+        //Run chamber
+        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(Constants.CHAMBER_MOTOR_POWER)),
 
         // Follow path to pick up balls
         RobotContainer.m_chassis.generateSwerveCommand(startingPose, waypoints, endingPose, 2.5, false),
 
-        //TODO Stop chamber
+        //Stop chamber
+        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0)),
+
         // Stop intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0)),
         // Retract intake

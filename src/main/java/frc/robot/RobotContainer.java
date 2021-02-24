@@ -14,35 +14,50 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer 
 {
     // Instantiate subsystems
+    public static final Chamber m_chamber = new Chamber();
     public static final Chassis m_chassis = new Chassis();
-
     public static final Launcher m_launcher = new Launcher();
-
     public static final Intake m_intake = new Intake();
 
+    public static final Limelight m_limelight = Limelight.getInstance();
+    
     // Region misc
 
     private final SendableChooser<String> m_autoChooser = new SendableChooser<>();
 
     // Endregion
     
-    // Instantiate 
+    // Instantiate OI and inline command
     public static final OI m_OI = new OI();
     public static final InlineCommands m_inlineCommands = new InlineCommands();
-  
+    
+  //Instantiates RobotContainer
   public RobotContainer()
   {
     m_OI.configureButtonBindings();
 
+    this.initializeStartup();
+
     this.initializeDefaultCommands();
+    
     this.initializeAutoChooser();
   }
 
+  //Initializes the Default Commands for chassis driving
   public static void initializeDefaultCommands()
   {
     m_chassis.setDefaultCommand(m_inlineCommands.m_driveWithJoystick);
   }
 
+  //Initializes certain functions when robot starts
+  public void initializeStartup()
+  {
+    m_limelight.turnOffLED();
+
+    m_chamber.startUltrasonics();
+  }
+
+  //Method used to configure Falcon motors (TalonFX motors) to be ran
   public static void configureTalonFX(WPI_TalonFX talonFX, boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD) 
   {
       /* Factory default to reset TalonFX and prevent unexpected behavior. */
@@ -82,22 +97,11 @@ public class RobotContainer
       talonFX.setSelectedSensorPosition(0, Constants.K_PID_LOOP_IDX, Constants.K_TIMEOUT_MS);
   }
 
+  //Method used to configure Talon SRX motors to be ran
   public static void configureTalonSRX(WPI_TalonSRX talonSRX, boolean controlMode, FeedbackDevice feedbackDevice,
   boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD, int kCruiseVelocity,
-  int kAcceleration, boolean resetPos)  
+  int kAcceleration, boolean resetPos)
   {
-    // Factory default to reset TalonSRX and prevent unexpected behavior.
-    talonSRX.configFactoryDefault();
-
-    // Configure Sensor Source for Primary PID.
-    talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.K_PID_LOOP_IDX, Constants.K_TIMEOUT_MS);
-
-    // Configure TalonSRX to drive forward when LED is green.
-    talonSRX.setInverted(setInverted);
-
-    // Configure TalonSRX's sensor to increment its value as it moves forward.
-    talonSRX.setSensorPhase(setSensorPhase);
-
     // Determine if the internal PID is being used
     if (controlMode)
     {
@@ -163,10 +167,10 @@ public class RobotContainer
     m_autoChooser.addOption("SLALOM", "slalom");
 
     // Display chooser on smart dashboard
-
     SmartDashboard.putData("Autonomous Commands", m_autoChooser);
   }
-    // Return the command to run during autonomous
+  
+  // Return the command to run during autonomous
   public Command getAutonomousCommand ()
   {
     switch (m_autoChooser.getSelected())
