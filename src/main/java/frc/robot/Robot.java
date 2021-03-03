@@ -26,7 +26,8 @@ public class Robot extends TimedRobot {
    */
   // @Overriden
 
-  public void robotInit() {
+  public void robotInit() 
+  {
     m_robotContainer = new RobotContainer();
 
     CameraServer.getInstance().startAutomaticCapture(0);
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() 
   {
     if (m_autonomousCommand != null) m_autonomousCommand.cancel();
-    RobotContainer.m_limelight.setModeVision();
+    //RobotContainer.m_limelight.setModeVision();
     RobotContainer.initializeDefaultCommands();
   }
 
@@ -73,6 +74,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() 
   {
-    RobotContainer.m_limelight.turnOffLED();
+    //RobotContainer.m_limelight.turnOffLED();
   }
 }

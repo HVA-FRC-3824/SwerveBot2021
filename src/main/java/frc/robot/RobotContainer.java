@@ -19,7 +19,7 @@ public class RobotContainer
     public static final Launcher m_launcher = new Launcher();
     public static final Intake m_intake = new Intake();
 
-    public static final Limelight m_limelight = Limelight.getInstance();
+    //public static final Limelight m_limelight = Limelight.getInstance();
     
     // Region misc
 
@@ -52,7 +52,7 @@ public class RobotContainer
   //Initializes certain functions when robot starts
   public void initializeStartup()
   {
-    m_limelight.turnOffLED();
+    //m_limelight.turnOffLED();
 
     m_chamber.startUltrasonics();
   }

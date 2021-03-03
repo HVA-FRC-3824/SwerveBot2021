@@ -85,32 +85,39 @@ public class Chassis extends SubsystemBase {
         // Instantiating Drivetrain objects
 
         m_angleMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
-        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+                                    Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0,
-        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0,
+                                    Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
-        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+                                    Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_ANGLE_ID);     
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
-        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+                                    Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+
+        // Try to instantiate the navX gyro with exception
+        try {
+            m_ahrs = new AHRS(SPI.Port.kMXP);
+        } catch (RuntimeException ex) {
+            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
+        }
 
         // Instantiating the Swerve Kinematics & Odometry
         m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.FRONT_RIGHT_LOCATION_M, Constants.FRONT_LEFT_LOCATOIN_M, 
@@ -125,17 +132,10 @@ public class Chassis extends SubsystemBase {
 
         // SwerveModuleState[] moduleStates = m_swerveDriveKinematics.toSwerveModuleStates(adjustedSpeeds);
 
-        m_frontRightState = moduleStates[0];
-        m_frontLeftState  = moduleStates[1];
-        m_backLeftState   = moduleStates[2];
-        m_backRightState  = moduleStates[3];
-
-        // Try to instantiate the navX gyro with exception
-        try {
-            m_ahrs = new AHRS(SPI.Port.kMXP);
-        } catch (RuntimeException ex) {
-            System.out.println("\nError instantiating navX-MXP:\n" + ex.getMessage() + "\n");
-        }
+        // m_frontRightState = moduleStates[0];
+        // m_frontLeftState  = moduleStates[1];
+        // m_backLeftState   = moduleStates[2];
+        // m_backRightState  = moduleStates[3];
 
         // Instantiating PID Controllers
         m_holonomicController = new HolonomicDriveController(m_xController, m_yController, m_angleController);
@@ -176,17 +176,17 @@ public class Chassis extends SubsystemBase {
         // Apply deadzone to turn analog stick
         if (Math.abs(x2) > 0.2)
             turn = x2;
-
-        // Find similar triangles to chassis for turn vectors (radius = 1)
-        double turnAngle = Math.atan2(l, w);
-        wR = Math.cos(turnAngle);
-        lR = Math.sin(turnAngle);
-
+        
         // Apply dead zone for velocities
         if (Math.abs(x1) > 0.2)
             vX = x1;
         if (Math.abs(y1) > 0.2)
             vY = -y1;
+
+        // Find similar triangles to chassis for turn vectors (radius = 1)
+        double turnAngle = Math.atan2(l, w);
+        wR = Math.cos(turnAngle);
+        lR = Math.sin(turnAngle);
 
         // Establishing swerve gyro difference
         double gyroCurrent = m_ahrs.getYaw();
