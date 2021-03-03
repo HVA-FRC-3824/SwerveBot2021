@@ -9,7 +9,7 @@ public class Constants
     // Button IDs
     public static final int    OPERATOR_CHAMBER_BASE_RPM_BTN_ID  = 14;
 
-    // CAN IDs
+// CAN IDs
 
     // Chamber motors IDs
     public static final int CHAMBER_WHEEL_ID                     = 0;
@@ -63,6 +63,10 @@ public class Constants
     public static final double CHAMBER_I                            = 0; 
     public static final double CHAMBER_D                            = 0;
     public static final double CHAMBER_F                            = 0;
+
+    public static final double K_CHASSIS_ANGLE_P                    = 0;
+    public static final double K_CHASSIS_ANGLE_I                    = 0;
+    public static final double K_CHASSIS_ANGLE_D                    = 0;
 
     // Intake PIDs
     public static final double INTAKE_WHEEL_P                       = 0;

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -84,25 +85,29 @@ public class Chassis extends SubsystemBase {
         // Instantiating Drivetrain objects
 
         m_angleMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0,
+        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
-        m_angleMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_ANGLE_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+        m_angleMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_ANGLE_ID);     
+        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
+        Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_SPEED_ID);
         RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
@@ -124,8 +129,6 @@ public class Chassis extends SubsystemBase {
         m_frontLeftState  = moduleStates[1];
         m_backLeftState   = moduleStates[2];
         m_backRightState  = moduleStates[3];
-
-        
 
         // Try to instantiate the navX gyro with exception
         try {
@@ -164,7 +167,7 @@ public class Chassis extends SubsystemBase {
         double vY = 0;
         double turn = 0;
 
-        //
+        //implificaton for adding turn and strafe velocity for each wheel
         double a;
         double b;
         double c;
@@ -206,6 +209,10 @@ public class Chassis extends SubsystemBase {
         double highestSpeed = Math.max(Math.max(Math.max(frontRight[0], frontLeft[0]), backLeft[0]), backRight[0]);
 
         // Finding speed of each wheel based on x and y velocities
+        frontRight[0] = Math.sqrt(Math.abs(b * b + c * c));
+        frontLeft[0] = Math.sqrt(Math.abs(b * b + d * d));
+        backLeft[0] = Math.sqrt(Math.abs(a * a + d * d));
+        backRight[0] = Math.sqrt(Math.abs(a * a + c * c));
 
         if (highestSpeed > 1) {
             frontRight[0] = frontRight[0] / highestSpeed;
@@ -258,10 +265,23 @@ public class Chassis extends SubsystemBase {
         drive(m_speedMotorBackRight, m_angleMotorBackRight, backRight[0],
                 -(backRight[1] + backRight[3]) / (Math.PI * 2) * Constants.SWERVE_TPR);
 
+        SmartDashboard.putNumber("Current Angle Back Right", backRight[1] + backRight[3]);  
+        SmartDashboard.putNumber("Current Angle Back Left", backLeft[1] + backLeft[3]);  
+        SmartDashboard.putNumber("Current Angle Front Right", frontRight [1] + frontRight[3]);  
+        SmartDashboard.putNumber("Current Angle Front Left", frontLeft[1] + frontLeft[3]);  
+    
+        SmartDashboard.putNumber("Speed Back Right", backRight[0]);
+        SmartDashboard.putNumber("Speed Back Left", backLeft[0]);
+        SmartDashboard.putNumber("Speed Front Right", frontRight[0]);
+        SmartDashboard.putNumber("Speed Front Left", frontLeft[0]);
+    
+        SmartDashboard.putNumber("Swerve Yaw", m_ahrs.getYaw());
+        SmartDashboard.putNumber("Swerve Compass", m_ahrs.getCompassHeading());
     }
 
     public void drive(WPI_TalonFX speedMotor, WPI_TalonFX angleMotor, double speed, double angle) 
     {
+        
         speedMotor.set(speed * 0.8);
 
         double setPoint = angle * (Constants.SWERVE_DRIVE_MAX_VOLTAGE * 1.5);
@@ -275,6 +295,7 @@ public class Chassis extends SubsystemBase {
 
         System.out.println("Speed: " + speed);
         System.out.println("Angle: " + angle);
+
     }
 
     public SequentialCommandGroup generateSwerveCommand(Pose2d startingPose, List<Translation2d> wayPoints, 
