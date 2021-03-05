@@ -19,7 +19,7 @@ public class RobotContainer
     public static final Launcher m_launcher = new Launcher();
     public static final Intake m_intake = new Intake();
 
-    //public static final Limelight m_limelight = Limelight.getInstance();
+    public static final Limelight m_limelight = Limelight.getInstance();
     
     // Region misc
 
@@ -37,8 +37,6 @@ public class RobotContainer
     m_OI.configureButtonBindings();
 
     this.initializeStartup();
-
-    this.initializeDefaultCommands();
     
     this.initializeAutoChooser();
   }
@@ -47,10 +45,11 @@ public class RobotContainer
   public static void initializeDefaultCommands()
   {
     m_chassis.setDefaultCommand(m_inlineCommands.m_driveWithJoystick);
+    m_chamber.setDefaultCommand(new ChamberIndexBalls());
   }
 
   //Initializes certain functions when robot starts
-  public void initializeStartup()
+  private void initializeStartup()
   {
     //m_limelight.turnOffLED();
 

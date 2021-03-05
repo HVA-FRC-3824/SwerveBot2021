@@ -17,15 +17,15 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class Robot extends TimedRobot {
 
+  private Command m_autonomousCommand;
+
   public static RobotContainer m_robotContainer;
 
-  private Command m_autonomousCommand;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
-  // @Overriden
-
+  @Override
   public void robotInit() 
   {
     m_robotContainer = new RobotContainer();
@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() 
   {
     if (m_autonomousCommand != null) m_autonomousCommand.cancel();
-    //RobotContainer.m_limelight.setModeVision();
+    RobotContainer.m_limelight.setModeVision();
     RobotContainer.initializeDefaultCommands();
   }
 

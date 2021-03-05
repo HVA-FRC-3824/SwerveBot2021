@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.OI;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.*;
@@ -29,17 +26,12 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
-import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 public class Chassis extends SubsystemBase {
 
     // Region Variables
 
     public AHRS m_ahrs;
-
-    // Region Auto
-
-    // Endregion
 
     // Region Motors
     private WPI_TalonFX m_angleMotorFrontRight;
@@ -66,7 +58,6 @@ public class Chassis extends SubsystemBase {
     private PIDController m_xController;
     private PIDController m_yController;
     private ProfiledPIDController m_angleController;
-    private HolonomicDriveController m_holonomicController;
 
     // [Speed, Angle, Previous Angle, Offset]
     private double[] frontRight = { 0, 0, 0, 0 };
@@ -130,19 +121,26 @@ public class Chassis extends SubsystemBase {
         m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
         m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
 
-        // SwerveModuleState[] moduleStates = m_swerveDriveKinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveModuleState[] moduleStates = new SwerveModuleState[4];
 
-        // m_frontRightState = moduleStates[0];
-        // m_frontLeftState  = moduleStates[1];
-        // m_backLeftState   = moduleStates[2];
-        // m_backRightState  = moduleStates[3];
-
-        // Instantiating PID Controllers
-        m_holonomicController = new HolonomicDriveController(m_xController, m_yController, m_angleController);
+        moduleStates[0] = m_frontRightState;
+        moduleStates[1] = m_frontLeftState;
+        moduleStates[2] = m_backLeftState;
+        moduleStates[3] = m_backRightState; //TODO figure out module states
 
         // Reset encoders and gyro to ensure autonomous path following is correct
         this.resetEncoders();
         this.zeroHeading();
+    }
+
+    /**
+   * Controls movement of robot drivetrain with passed in power and turn values
+   * from autonomous input. Example: vision control.
+   * Difference from teleopDrive is there's no deadband.
+   */
+    public void autoDrive(double x1, double y1, double turn)
+    {
+        this.convertSwerveValues(x1, y1, turn);
     }
     
     public void calculatePIDs() 
@@ -362,16 +360,6 @@ public class Chassis extends SubsystemBase {
         moduleStates = modState;
     }
 
-
-    // Public void updateOdometry() 
-    // {
-    // //get gyro angle. Negate values to match WPILib convention
-    // var gyroAngle = Rotation2d.fromDegrees(-getHeading());
-    // m_swerveDriveOdometry.update(gyroAngle, m_frontRightState, m_frontLeftState, m_backLeftState, m_backRightState);
-    // // Update odometry
-    // }
-
-    // Reset gyro to zero the heading of the robot
     public void zeroHeading()
     {
         m_ahrs.reset();

@@ -25,8 +25,6 @@ public class AutoGalacticRedA extends SequentialCommandGroup
     public AutoGalacticRedA()
     {
       addCommands(
-        // Extend intake
-        new InstantCommand(() -> RobotContainer.m_intake.extendExtender()),
         // Start intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(Constants.INTAKE_MOTOR_POWER)),
 
@@ -40,9 +38,7 @@ public class AutoGalacticRedA extends SequentialCommandGroup
         new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0)),
 
         // Stop intake
-        new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0)),
-        // Retract intake
-        new InstantCommand(() -> RobotContainer.m_intake.retractExtender())
+        new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0))
         );   
     }
 }

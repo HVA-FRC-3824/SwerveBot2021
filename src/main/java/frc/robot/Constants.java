@@ -7,7 +7,19 @@ public class Constants
 {
 
     // Button IDs
-    public static final int    OPERATOR_CHAMBER_BASE_RPM_BTN_ID  = 1;
+
+    // Chamber Buttons
+    public static final int    OPERATOR_CHAMBER_FORWARDS_BTN_ID  = 1;
+    public static final int    OPERATOR_CHAMBER_BACKWARDS_BTN_ID = 2;
+
+    // Intake Buttons
+    public static final int    OPERATOR_INTAKE_WHEEL_RPM_BTN_ID  = 3;
+
+    // Launcher Buttons
+    public static final int OPERATOR_LAUNCHER_PRESET_GREEN_BTN_ID  = 4;
+    public static final int OPERATOR_LAUNCHER_PRESET_YELLOW_BTN_ID = 5; 
+    public static final int OPERATOR_LAUNCHER_PRESET_BLUE_BTN_ID   = 6;
+    public static final int OPERATOR_LAUNCHER_PRESET_RED_BTN_ID    = 7;
 
     // CAN IDs
 
@@ -43,12 +55,16 @@ public class Constants
     // Chamber ports
     public static final int CHAMBER_OUTPUT_PORT_A                = 2;
     public static final int CHAMBER_OUTPUT_PORT_B                = 3;
+    public static final int CHAMBER_BALL_POS_ENTER_PING          = 4;
+    public static final int CHAMBER_BALL_POS_ENTER_ECHO          = 5;
+    public static final int CHAMBER_BALL_POS_EXIT_PING           = 6;
+    public static final int CHAMBER_BALL_POS_EXIT_ECHO           = 7;
 
     // Intake
-    public static final int INTAKE_LEFT_EXTENDER_PORT_A          = 4;
-    public static final int INTAKE_LEFT_EXTENDER_PORT_B          = 5;
-    public static final int INTAKE_RIGHT_EXTENDER_PORT_A         = 6;
-    public static final int INTAKE_RIGHT_EXTENDER_PORT_B         = 7;
+    public static final int INTAKE_LEFT_EXTENDER_PORT_A          = 8;
+    public static final int INTAKE_LEFT_EXTENDER_PORT_B          = 9;
+    public static final int INTAKE_RIGHT_EXTENDER_PORT_A         = 10;
+    public static final int INTAKE_RIGHT_EXTENDER_PORT_B         = 11;
 
     // PID Values
     
@@ -112,16 +128,29 @@ public class Constants
     public static final int    AUTONOMOUS_PATH_SPEED             = 3;
     
     public static final double CHAMBER_MOTOR_POWER               = 0.5;
+    public static final double CHAMBER_BALL_THRESHOLD            = 3.0;
+
+    public static final double K_CHASSIS_TURN_VISION_P           = 0.02;
+    public static final double K_CHASSIS_TURN_VISION_MIN         = 0.1;
+    public static final double CHASSIS_TURN_ERROR_THRESHOLD      = 0.5;
+
     public static final double INTAKE_MOTOR_POWER                = 0.5;
+    
+    public static final Constraints ANGLE_CONTROLLER_CONSTRAINTS = new Constraints(0.0, 0.0);
 
-    // Speeds and Constraints
-    public static final Constraints ANGLE_CONTROLLER_CONSTRAINTS = new Constraints(0.0, 0.0);   
+    // Distance, Speed, Acceleration
 
+    public static final double CHAMBER_BALL_STEP_DIST            = 4000.0;
     public static final double MAX_ACCELERATION_MPS2             = 3.0; //meters per second squared
     public static final int    MOTOR_TPR                         = 2048; //ticks per revolution of motor
     public static final double SWERVE_DRIVE_MAX_VOLTAGE          = 4.95;    
     public static final double SWERVE_GEAR_RATIO                 = 0.0833333; //wheel spins per angle motor spin    
     public static final double SWERVE_TPR                        = MOTOR_TPR / SWERVE_GEAR_RATIO; //motors ticks per revolution of wheel
+    
+    public static final int LAUNCHER_GREEN_ZONE_MOTOR_RPM        = 0;
+    public static final int LAUNCHER_YELLOW_ZONE_MOTOR_RPM       = 0;
+    public static final int LAUNCHER_BLUE_ZONE_MOTOR_RPM         = 0;
+    public static final int LAUNCHER_RED_ZONE_MOTOR_RPM          = 0;
 
 
     // Location of motors relative to the center
