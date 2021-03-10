@@ -9,17 +9,20 @@ public class Constants
     // Button IDs
 
     // Chamber Buttons
-    public static final int    OPERATOR_CHAMBER_FORWARDS_BTN_ID  = 1;
-    public static final int    OPERATOR_CHAMBER_BACKWARDS_BTN_ID = 2;
+    public static final int    OPERATOR_CHAMBER_FORWARDS_BTN_ID  = 14;
+    public static final int    OPERATOR_CHAMBER_BACKWARDS_BTN_ID = 10;
+
+    // Chassis Buttons
+    public static final int    DRIVER_RESET_HEADING_BTN          = 4; 
 
     // Intake Buttons
-    public static final int    OPERATOR_INTAKE_WHEEL_RPM_BTN_ID  = 3;
+    public static final int    OPERATOR_INTAKE_WHEEL_RPM_BTN_ID  = 15;
 
     // Launcher Buttons
-    public static final int OPERATOR_LAUNCHER_PRESET_GREEN_BTN_ID  = 4;
-    public static final int OPERATOR_LAUNCHER_PRESET_YELLOW_BTN_ID = 5; 
-    public static final int OPERATOR_LAUNCHER_PRESET_BLUE_BTN_ID   = 6;
-    public static final int OPERATOR_LAUNCHER_PRESET_RED_BTN_ID    = 7;
+    public static final int OPERATOR_LAUNCHER_PRESET_GREEN_BTN_ID  = 3;
+    public static final int OPERATOR_LAUNCHER_PRESET_YELLOW_BTN_ID = 6; 
+    public static final int OPERATOR_LAUNCHER_PRESET_BLUE_BTN_ID   = 4;
+    public static final int OPERATOR_LAUNCHER_PRESET_RED_BTN_ID    = 5;
 
     // CAN IDs
 

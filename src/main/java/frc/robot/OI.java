@@ -13,6 +13,9 @@ public class OI
     private static JoystickButton m_setChamberForwardsBtn;
     private static JoystickButton m_setChamberBackwardsBtn;
     
+    // Chassis
+    private static JoystickButton m_resetHeadingBtn;
+    
     // Intake
     private static JoystickButton m_setIntakeWheelRPMBtn;
 
@@ -31,6 +34,9 @@ public class OI
         // Chamber buttons
         m_setChamberForwardsBtn   = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_CHAMBER_FORWARDS_BTN_ID);
         m_setChamberBackwardsBtn  = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_CHAMBER_BACKWARDS_BTN_ID);
+
+        // Chassis buttons
+        m_resetHeadingBtn         = new JoystickButton(m_driverJoystick, Constants.DRIVER_RESET_HEADING_BTN);
 
         // Intake buttons
         m_setIntakeWheelRPMBtn    = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_INTAKE_WHEEL_RPM_BTN_ID);
@@ -51,6 +57,9 @@ public class OI
     
         m_setChamberBackwardsBtn.whenPressed(RobotContainer.m_inlineCommands.m_setChamberBackwards);
         m_setChamberBackwardsBtn.whenReleased(RobotContainer.m_inlineCommands.m_setChamberAuto);
+
+        // Chassis
+        m_resetHeadingBtn.whenPressed(RobotContainer.m_inlineCommands.m_resetHeading);
         
         // Intake
         m_setIntakeWheelRPMBtn.whenPressed(RobotContainer.m_inlineCommands.m_setIntakeWheelsRPM);
