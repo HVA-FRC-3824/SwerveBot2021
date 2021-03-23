@@ -29,13 +29,13 @@ public class AutoGalacticRedB extends SequentialCommandGroup
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(Constants.INTAKE_MOTOR_POWER)),
 
         //Run chamber
-        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(Constants.CHAMBER_MOTOR_POWER)),
+        new InstantCommand(() -> RobotContainer.m_chamber.setElevatorPower(Constants.CHAMBER_MOTOR_POWER)),
 
         // Follow path to pick up balls
         RobotContainer.m_chassis.generateSwerveCommand(startingPose, waypoints, endingPose, 2.5, false),
 
         //Stop chamber
-        new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0)),
+        new InstantCommand(() -> RobotContainer.m_chamber.setElevatorPower(0)),
 
         // Stop intake
         new InstantCommand(() -> RobotContainer.m_intake.setWheelPower(0))

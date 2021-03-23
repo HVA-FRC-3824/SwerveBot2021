@@ -27,28 +27,33 @@ public class OI
     
     public OI()
     {
-        m_driverJoystick = new Joystick(Constants.DRIVER_JOYSTICK_PORT);
+        m_driverJoystick             = new Joystick(Constants.DR_JOYSTICK_PORT);
 
-        m_operatorJoystick = new Joystick(Constants.OPERATOR_JOYSTICK_PORT);
+        m_operatorJoystick           = new Joystick(Constants.OP_JOYSTICK_PORT);
 
         // Chamber buttons
-        m_setChamberForwardsBtn   = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_CHAMBER_FORWARDS_BTN_ID);
-        m_setChamberBackwardsBtn  = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_CHAMBER_BACKWARDS_BTN_ID);
+        m_setChamberForwardsBtn      = new JoystickButton(m_operatorJoystick, Constants.OP_CHAMBER_FORWARDS_BTN_ID);
+        m_setChamberBackwardsBtn     = new JoystickButton(m_operatorJoystick, Constants.OP_CHAMBER_BACKWARDS_BTN_ID);
 
         // Chassis buttons
-        m_resetHeadingBtn         = new JoystickButton(m_driverJoystick, Constants.DRIVER_RESET_HEADING_BTN);
+        m_resetHeadingBtn            = new JoystickButton(m_driverJoystick, Constants.DR_RESET_HEADING_BTN);
 
         // Intake buttons
-        m_setIntakeWheelRPMBtn    = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_INTAKE_WHEEL_RPM_BTN_ID);
+        m_setIntakeWheelRPMBtn       = new JoystickButton(m_operatorJoystick, Constants.OP_INTAKE_WHEEL_RPM_BTN_ID);
 
         // Launcher buttons
-        m_setLauncherPresetGreenBtn    = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_LAUNCHER_PRESET_GREEN_BTN_ID);
-        m_setLauncherPresetYellowBtn   = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_LAUNCHER_PRESET_YELLOW_BTN_ID);
-        m_setLauncherPresetBlueBtn     = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_LAUNCHER_PRESET_BLUE_BTN_ID);
-        m_setLauncherPresetRedBtn      = new JoystickButton(m_operatorJoystick, Constants.OPERATOR_LAUNCHER_PRESET_RED_BTN_ID);
+        m_setLauncherPresetGreenBtn  = new JoystickButton(m_operatorJoystick, Constants.OP_LAUNCHER_PRESET_GREEN_BTN_ID);
+        m_setLauncherPresetYellowBtn = new JoystickButton(m_operatorJoystick, Constants.OP_LAUNCHER_PRESET_YELLOW_BTN_ID);
+        m_setLauncherPresetBlueBtn   = new JoystickButton(m_operatorJoystick, Constants.OP_LAUNCHER_PRESET_BLUE_BTN_ID);
+        m_setLauncherPresetRedBtn    = new JoystickButton(m_operatorJoystick, Constants.OP_LAUNCHER_PRESET_RED_BTN_ID);
 
     }
 
+    /**
+   * Bind commands to joystick buttons.
+   * This method is run after the instantiation of the inline commands class because if run before,
+   * the inline commands binded to the joystick buttons wouldn't have a reference point.
+   */
     public void configureButtonBindings()
     {
         // Chamber

@@ -55,10 +55,6 @@ public class Chassis extends SubsystemBase {
     private SwerveDriveKinematics m_swerveDriveKinematics;
     public  SwerveDriveOdometry m_swerveDriveOdometry;
 
-    private PIDController m_xController;
-    private PIDController m_yController;
-    private ProfiledPIDController m_angleController;
-
     // [Speed, Angle, Previous Angle, Offset]
     private double[] frontRight = { 0, 0, 0, 0 };
     private double[] frontLeft = { 0, 0, 0, 0 };
@@ -72,36 +68,34 @@ public class Chassis extends SubsystemBase {
 // Main Method
     public Chassis() 
     {
-
         // Instantiating Drivetrain objects
-
         m_angleMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_ANGLE_ID);
                                     RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
                                     Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontRight = new WPI_TalonFX(Constants.FRONT_RIGHT_SPEED_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_ANGLE_ID);
                                     RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0,
                                     Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorFrontLeft = new WPI_TalonFX(Constants.FRONT_LEFT_SPEED_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_ANGLE_ID);
                                     RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
                                     Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackLeft = new WPI_TalonFX(Constants.BACK_LEFT_SPEED_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         m_angleMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_ANGLE_ID);     
                                     RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 
                                     Constants.K_CHASSIS_ANGLE_P, Constants.K_CHASSIS_ANGLE_I, Constants.K_CHASSIS_ANGLE_D);
 
         m_speedMotorBackRight = new WPI_TalonFX(Constants.BACK_RIGHT_SPEED_ID);
-        RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
+                                    RobotContainer.configureTalonFX(m_angleMotorFrontRight, false, false, 0.0, 0.0, 0.0, 0.0);
 
         // Try to instantiate the navX gyro with exception
         try {
@@ -111,8 +105,8 @@ public class Chassis extends SubsystemBase {
         }
 
         // Instantiating the Swerve Kinematics & Odometry
-        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.FRONT_RIGHT_LOCATION_M, Constants.FRONT_LEFT_LOCATOIN_M, 
-                                    Constants.BACK_LEFT_LOCATION_M, Constants.BACK_RIGHT_LOCATION_M);
+        m_swerveDriveKinematics = new SwerveDriveKinematics(Constants.FRONT_RIGHT_WHEEL_LOCATION, Constants.FRONT_LEFT_WHEEL_LOCATION, 
+                                    Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
         m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
 
         // Module state setting
@@ -121,7 +115,7 @@ public class Chassis extends SubsystemBase {
         m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
         m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
 
-        SwerveModuleState[] moduleStates = new SwerveModuleState[4];
+        moduleStates = new SwerveModuleState[4];
 
         moduleStates[0] = m_frontRightState;
         moduleStates[1] = m_frontLeftState;

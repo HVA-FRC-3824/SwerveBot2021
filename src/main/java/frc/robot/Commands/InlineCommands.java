@@ -36,10 +36,10 @@ public class InlineCommands
     {
         // Chamber command instantiation
         m_runChamber =
-            new InstantCommand(() -> RobotContainer.m_chamber.runChamber(Constants.CHAMBER_MOTOR_POWER));
+            new InstantCommand(() -> RobotContainer.m_chamber.setElevatorPower(Constants.CHAMBER_MOTOR_POWER));
 
         m_stopChamber = 
-            new InstantCommand(() -> RobotContainer.m_chamber.runChamber(0));
+            new InstantCommand(() -> RobotContainer.m_chamber.setElevatorPower(0));
 
         m_setChamberForwards =
             new RunCommand(() -> RobotContainer.m_chamber.stepChamberDistance(Constants.CHAMBER_BALL_STEP_DIST), RobotContainer.m_chamber);

@@ -18,19 +18,18 @@ public class Launcher extends SubsystemBase
 
     public Launcher()
     {
-      
-      // Region Instantiate mors
 
       m_topRightWheel = new WPI_TalonSRX(Constants.LAUNCHER_TOP_RIGHT_MOTOR_ID);
-      RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
+      RobotContainer.configureTalonSRX(m_topRightWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, false, false, 
+                                      Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, false);
 
       m_topLeftWheel = new WPI_TalonSRX(Constants.LAUNCHER_TOP_LEFT_MOTOR_ID);
-      RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
+      RobotContainer.configureTalonSRX(m_topLeftWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, false, false, 
+                                      Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, false);
 
       m_bottomWheel = new WPI_TalonSRX(Constants.LAUNCHER_BOTTOM_MOTOR_ID);
-      RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, true);
-      
-      // Endregion
+      RobotContainer.configureTalonSRX(m_bottomWheel, false, FeedbackDevice.CTRE_MagEncoder_Relative, false, false, 
+                                      Constants.LAUNCHER_F, Constants.LAUNCHER_P, Constants.LAUNCHER_I, Constants.LAUNCHER_D, 0, 0, false);
 
     }
 
@@ -50,8 +49,9 @@ public class Launcher extends SubsystemBase
     return m_bottomWheel;
   }
 
-   /* Sets the power output of the top and bottom launcher wheels.
-   * @param power is between -1.0 and 1.0.*/
+  /** Sets the power output of the top and bottom launcher wheels.
+  * @param power is between -1.0 and 1.0.
+  */
   public void setTopRightWheelPower(double power)
   {
     m_topRightWheel.set(ControlMode.PercentOutput, power);
@@ -65,8 +65,9 @@ public class Launcher extends SubsystemBase
     m_bottomWheel.set(ControlMode.PercentOutput, power);
   }
 
-   /* Sets the RPM of the top and bottom launcher wheels.
-   * @param rpm is converted to a velocity (units/100ms) for the launcher wheels PID to be set to.*/
+  /** Sets the RPM of the top and bottom launcher wheels.
+  * @param rpm is converted to a velocity (units/100ms) for the launcher wheels PID to be set to.
+  */
   public void setTopLeftWheelRPM(int rpm)
   {
     m_topLeftWheel.set(ControlMode.Velocity, RobotContainer.convertRPMToVelocity(rpm, Constants.MOTOR_TPR));

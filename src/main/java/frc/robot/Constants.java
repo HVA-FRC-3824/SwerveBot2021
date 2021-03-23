@@ -6,74 +6,69 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 public class Constants 
 {
 
-    // Button IDs
+    // Button IDs (OP = OPERATOR, DR = DRIVER)
 
     // Chamber Buttons
-    public static final int    OPERATOR_CHAMBER_FORWARDS_BTN_ID  = 14;
-    public static final int    OPERATOR_CHAMBER_BACKWARDS_BTN_ID = 10;
+    public static final int    OP_CHAMBER_FORWARDS_BTN_ID        = 14;
+    public static final int    OP_CHAMBER_BACKWARDS_BTN_ID       = 10;
 
     // Chassis Buttons
-    public static final int    DRIVER_RESET_HEADING_BTN          = 4; 
+    public static final int    DR_RESET_HEADING_BTN              = 4; 
 
     // Intake Buttons
-    public static final int    OPERATOR_INTAKE_WHEEL_RPM_BTN_ID  = 15;
+    public static final int    OP_INTAKE_WHEEL_RPM_BTN_ID        = 15;
 
     // Launcher Buttons
-    public static final int OPERATOR_LAUNCHER_PRESET_GREEN_BTN_ID  = 3;
-    public static final int OPERATOR_LAUNCHER_PRESET_YELLOW_BTN_ID = 6; 
-    public static final int OPERATOR_LAUNCHER_PRESET_BLUE_BTN_ID   = 4;
-    public static final int OPERATOR_LAUNCHER_PRESET_RED_BTN_ID    = 5;
+    public static final int    OP_LAUNCHER_PRESET_GREEN_BTN_ID   = 3;
+    public static final int    OP_LAUNCHER_PRESET_YELLOW_BTN_ID  = 6; 
+    public static final int    OP_LAUNCHER_PRESET_BLUE_BTN_ID    = 4;
+    public static final int    OP_LAUNCHER_PRESET_RED_BTN_ID     = 5;
 
     // CAN IDs
 
     // Chamber motors IDs
-    public static final int CHAMBER_WHEEL_ID                     = 0;
+    public static final int    CHAMBER_WHEEL_ID                  = 0;
 
     // Chassis motor IDs
-    public static final int BACK_LEFT_ANGLE_ID                   = 1;
-    public static final int BACK_LEFT_SPEED_ID                   = 2;
-    public static final int BACK_RIGHT_ANGLE_ID                  = 3;
-    public static final int BACK_RIGHT_SPEED_ID                  = 4;
-    public static final int FRONT_RIGHT_ANGLE_ID                 = 5;
-    public static final int FRONT_RIGHT_SPEED_ID                 = 6;
-    public static final int FRONT_LEFT_ANGLE_ID                  = 7;
-    public static final int FRONT_LEFT_SPEED_ID                  = 8;
+    public static final int    BACK_LEFT_ANGLE_ID                = 1;
+    public static final int    BACK_LEFT_SPEED_ID                = 2;
+    public static final int    BACK_RIGHT_ANGLE_ID               = 3;
+    public static final int    BACK_RIGHT_SPEED_ID               = 4;
+    public static final int    FRONT_RIGHT_ANGLE_ID              = 5;
+    public static final int    FRONT_RIGHT_SPEED_ID              = 6;
+    public static final int    FRONT_LEFT_ANGLE_ID               = 7;
+    public static final int    FRONT_LEFT_SPEED_ID               = 8;
 
     // Launcher motor IDs
-    public static final int LAUNCHER_BOTTOM_MOTOR_ID             = 9; //TODO find right values for motor CAN IDs
-    public static final int LAUNCHER_TOP_LEFT_MOTOR_ID           = 10;
-    public static final int LAUNCHER_TOP_RIGHT_MOTOR_ID          = 11; 
-    public static final int LAUNCHER_PIVOT_ID                    = 12;
+    public static final int    LAUNCHER_BOTTOM_MOTOR_ID          = 9; //TODO find right values for motor CAN IDs
+    public static final int    LAUNCHER_TOP_LEFT_MOTOR_ID        = 10;
+    public static final int    LAUNCHER_TOP_RIGHT_MOTOR_ID       = 11; 
+    public static final int    LAUNCHER_PIVOT_ID                 = 12;
 
     // Intake motor IDs
-    public static final int INTAKE_MOTOR_ID                      = 13;
+    public static final int    INTAKE_MOTOR_ID                   = 13;
 
     // Ports
 
     
     // Joystick ports
-    public static final int DRIVER_JOYSTICK_PORT                 = 0;
-    public static final int OPERATOR_JOYSTICK_PORT               = 1;
+    public static final int    DR_JOYSTICK_PORT                  = 0;
+    public static final int    OP_JOYSTICK_PORT                  = 1;
 
     // Chamber ports
-    public static final int CHAMBER_OUTPUT_PORT_A                = 2;
-    public static final int CHAMBER_OUTPUT_PORT_B                = 3;
-    public static final int CHAMBER_BALL_POS_ENTER_PING          = 4;
-    public static final int CHAMBER_BALL_POS_ENTER_ECHO          = 5;
-    public static final int CHAMBER_BALL_POS_EXIT_PING           = 6;
-    public static final int CHAMBER_BALL_POS_EXIT_ECHO           = 7;
+    public static final int    CHAMBER_OUTPUT_PORT_A             = 2;
+    public static final int    CHAMBER_OUTPUT_PORT_B             = 3;
+    public static final int    CHAMBER_BALL_POS_ENTER_PING       = 4;
+    public static final int    CHAMBER_BALL_POS_ENTER_ECHO       = 5;
+    public static final int    CHAMBER_BALL_POS_EXIT_PING        = 6;
+    public static final int    CHAMBER_BALL_POS_EXIT_ECHO        = 7;
 
-    // Intake
-    public static final int INTAKE_LEFT_EXTENDER_PORT_A          = 8;
-    public static final int INTAKE_LEFT_EXTENDER_PORT_B          = 9;
-    public static final int INTAKE_RIGHT_EXTENDER_PORT_A         = 10;
-    public static final int INTAKE_RIGHT_EXTENDER_PORT_B         = 11;
 
     // PID Values
     
-    public static final int K_PID_LOOP_IDX                       = 8;
-    public static final int K_SLOT_IDX                           = 9;
-    public static final int K_TIMEOUT_MS                         = 30;
+    public static final int    K_PID_LOOP_IDX                    = 8;
+    public static final int    K_SLOT_IDX                        = 9;
+    public static final int    K_TIMEOUT_MS                      = 30;
 
     // Chamber PIDs
     public static final double CHAMBER_P                         = 0;
@@ -122,10 +117,6 @@ public class Constants
     public static final double LAUCHER_AIM_VISION_P              = 0.07;
     public static final double LAUCHER_AIM_VISION_MIN            = 0.03;
 
-    // Gyro
-
-    public static final boolean K_GYRO_REVERSED                  = true;
-
     // Constraints
     
     public static final int    AUTONOMOUS_PATH_SPEED             = 3;
@@ -150,17 +141,19 @@ public class Constants
     public static final double SWERVE_GEAR_RATIO                 = 0.0833333; //wheel spins per angle motor spin    
     public static final double SWERVE_TPR                        = MOTOR_TPR / SWERVE_GEAR_RATIO; //motors ticks per revolution of wheel
     
-    public static final int LAUNCHER_GREEN_ZONE_MOTOR_RPM        = 0;
-    public static final int LAUNCHER_YELLOW_ZONE_MOTOR_RPM       = 0;
-    public static final int LAUNCHER_BLUE_ZONE_MOTOR_RPM         = 0;
-    public static final int LAUNCHER_RED_ZONE_MOTOR_RPM          = 0;
+    public static final int    LAUNCHER_GREEN_ZONE_MOTOR_RPM     = 0;
+    public static final int    LAUNCHER_YELLOW_ZONE_MOTOR_RPM    = 0;
+    public static final int    LAUNCHER_BLUE_ZONE_MOTOR_RPM      = 0;
+    public static final int    LAUNCHER_RED_ZONE_MOTOR_RPM       = 0;
 
 
-    // Location of motors relative to the center
-    public static final Translation2d BACK_LEFT_LOCATION_M       = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
-    public static final Translation2d BACK_RIGHT_LOCATION_M      = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
-    public static final Translation2d FRONT_LEFT_LOCATOIN_M      = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y        
-    public static final Translation2d FRONT_RIGHT_LOCATION_M     = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    // Location of wheels relative to the center
+    public static final Translation2d BACK_LEFT_WHEEL_LOCATION   = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d BACK_RIGHT_WHEEL_LOCATION  = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
+    public static final Translation2d FRONT_LEFT_WHEEL_LOCATION  = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y        
+    public static final Translation2d FRONT_RIGHT_WHEEL_LOCATION = new Translation2d(0.7 , 0.3); //TODO forward is +X and left is +Y
 
     // Miscellaneous Constants
+
+    public static final boolean K_GYRO_REVERSED                  = true;
 }

@@ -28,8 +28,8 @@ public class RobotContainer
     // Endregion
     
     // Instantiate OI and inline command
-    public static final OI m_OI = new OI();
     public static final InlineCommands m_inlineCommands = new InlineCommands();
+    public static final OI m_OI = new OI();
     
   //Instantiates RobotContainer
   public RobotContainer()
@@ -101,6 +101,18 @@ public class RobotContainer
   boolean setInverted, boolean setSensorPhase, double kF, double kP, double kI, double kD, int kCruiseVelocity,
   int kAcceleration, boolean resetPos)
   {
+    /* Factory default to reset TalonSRX and prevent unexpected behavior. */
+    talonSRX.configFactoryDefault();
+
+    /* Configure Sensor Source for Primary PID. */
+    talonSRX.configSelectedFeedbackSensor(feedbackDevice, Constants.K_PID_LOOP_IDX, Constants.K_TIMEOUT_MS);
+
+    /* Configure TalonSRX to drive forward when LED is green. */
+    talonSRX.setInverted(setInverted);
+
+    /* Configure TalonSRX's sensor to increment its value as it moves forward. */
+    talonSRX.setSensorPhase(setSensorPhase);
+
     // Determine if the internal PID is being used
     if (controlMode)
     {
@@ -143,9 +155,11 @@ public class RobotContainer
     }
   }
     
-   /* Convert RPM to units/100ms for TalonSRX/TalonFX to use for ControlMode.Velocity.
+  /**
+   *  Convert RPM to units/100ms for TalonSRX/TalonFX to use for ControlMode.Velocity.
    * @param rpm is desired revolutions per minute.
-   * @param tpr is the encoder ticks per revolution.*/
+   * @param tpr is the encoder ticks per revolution.
+   */
   public static double convertRPMToVelocity(int rpm, int tpr)
   {
     // (RPM * TPR Units/Revolution / 600 100ms/min)

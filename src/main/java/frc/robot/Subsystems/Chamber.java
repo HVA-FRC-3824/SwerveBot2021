@@ -23,7 +23,7 @@ public class Chamber extends SubsystemBase
     public Chamber()
     {
         m_elevator = new WPI_TalonSRX(Constants.CHAMBER_WHEEL_ID);
-        RobotContainer.configureTalonSRX(m_elevator, false, FeedbackDevice.CTRE_MagEncoder_Relative, true, true, 
+        RobotContainer.configureTalonSRX(m_elevator, false, FeedbackDevice.CTRE_MagEncoder_Relative, false, false, 
                                         Constants.CHAMBER_F, Constants.CHAMBER_P, Constants.CHAMBER_I, Constants.CHAMBER_D, 0, 0, true);
         
         m_ballPos_entering = new Ultrasonic(Constants.CHAMBER_BALL_POS_ENTER_PING, Constants.CHAMBER_BALL_POS_ENTER_ECHO);
@@ -54,12 +54,18 @@ public class Chamber extends SubsystemBase
         autoIndexBalls.schedule();
     }
 
-    public void runChamber(double power)
+    /**
+    * Gets the distance reading of a specified ultrasonic.
+    * @param sensor is the index of the ultrasonic in the sensors array to read the distance from.
+    * @return the distance of the specified ultrasonic.
+    */
+    public double SensorDistance(int sensor)
     {
-        m_elevator.set(ControlMode.PercentOutput, power);
+        Ultrasonic [] sensors = {m_ballPos_entering, m_ballPos_exiting};
+        return sensors[sensor].getRangeInches();
     }
 
-    public void setElevatorPower (double power)
+    public void setElevatorPower(double power)
     {
         m_elevator.set(ControlMode.PercentOutput, power);
     }
