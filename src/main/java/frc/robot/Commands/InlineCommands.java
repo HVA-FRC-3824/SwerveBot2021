@@ -54,7 +54,7 @@ public class InlineCommands
             RobotContainer.m_chassis.convertSwerveValues    (
                     RobotContainer.m_OI.getDriverJoystick().getRawAxis(0),
                     RobotContainer.m_OI.getDriverJoystick().getRawAxis(1), 
-                    RobotContainer.m_OI.getDriverJoystick().getRawAxis(4)   ), 
+                    RobotContainer.m_OI.getDriverJoystick().getRawAxis(2)   ), 
                 RobotContainer.m_chassis);
 
         m_resetHeading = 

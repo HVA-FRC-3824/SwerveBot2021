@@ -52,7 +52,7 @@ public class ChassisTurnToTarget extends CommandBase
     }
 
     /* Give output to drive train. */
-    RobotContainer.m_chassis.autoDrive(RobotContainer.m_OI.getDriverJoystick().getX(), RobotContainer.m_OI.getDriverJoystick().getY(), m_turn);
+    RobotContainer.m_chassis.convertSwerveValues(RobotContainer.m_OI.getDriverJoystick().getX(), RobotContainer.m_OI.getDriverJoystick().getY(), m_turn);
   }
 
   /**

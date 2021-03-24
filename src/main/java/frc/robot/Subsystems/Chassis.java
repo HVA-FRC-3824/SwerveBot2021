@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -27,13 +27,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 
-public class Chassis extends SubsystemBase {
-
-    // Region Variables
-
+public class Chassis extends SubsystemBase 
+{
     public AHRS m_ahrs;
 
-    // Region Motors
     private WPI_TalonFX m_angleMotorFrontRight;
     private WPI_TalonFX m_speedMotorFrontRight;
 
@@ -46,12 +43,6 @@ public class Chassis extends SubsystemBase {
     private WPI_TalonFX m_angleMotorBackRight;
     private WPI_TalonFX m_speedMotorBackRight;
 
-    private SwerveModuleState m_frontRightState;
-    private SwerveModuleState m_frontLeftState;
-    private SwerveModuleState m_backLeftState;
-    private SwerveModuleState m_backRightState;
-    private SwerveModuleState[] moduleStates;
-
     private SwerveDriveKinematics m_swerveDriveKinematics;
     public  SwerveDriveOdometry m_swerveDriveOdometry;
 
@@ -61,11 +52,6 @@ public class Chassis extends SubsystemBase {
     private double[] backLeft = { 0, 0, 0, 0 };
     private double[] backRight = { 0, 0, 0, 0 };
 
-    // Endregion
-
-    // Endregion
-
-// Main Method
     public Chassis() 
     {
         // Instantiating Drivetrain objects
@@ -109,22 +95,10 @@ public class Chassis extends SubsystemBase {
                                     Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
         m_swerveDriveOdometry = new SwerveDriveOdometry(m_swerveDriveKinematics, m_ahrs.getRotation2d());
 
-        // Module state setting
-        m_frontRightState = new SwerveModuleState(frontRight[0], Rotation2d.fromDegrees(frontRight[1]* 180/Math.PI)); //TODO add rpm to mps method
-        m_frontLeftState = new SwerveModuleState(frontLeft[0], Rotation2d.fromDegrees(frontLeft[1]* 180/Math.PI));
-        m_backLeftState = new SwerveModuleState(backLeft[0], Rotation2d.fromDegrees(backLeft[1]* 180/Math.PI));
-        m_backRightState = new SwerveModuleState(backRight[0], Rotation2d.fromDegrees(backRight[1]* 180/Math.PI));
-
-        moduleStates = new SwerveModuleState[4];
-
-        moduleStates[0] = m_frontRightState;
-        moduleStates[1] = m_frontLeftState;
-        moduleStates[2] = m_backLeftState;
-        moduleStates[3] = m_backRightState; //TODO figure out module states
-
         // Reset encoders and gyro to ensure autonomous path following is correct
         this.resetEncoders();
         this.zeroHeading();
+
     }
 
     /**
@@ -132,15 +106,6 @@ public class Chassis extends SubsystemBase {
    * from autonomous input. Example: vision control.
    * Difference from teleopDrive is there's no deadband.
    */
-    public void autoDrive(double x1, double y1, double turn)
-    {
-        this.convertSwerveValues(x1, y1, turn);
-    }
-    
-    public void calculatePIDs() 
-    { 
-        // m_speedMotorFrontRight.set(m_xController.calculate(Encoder.getDistance(), setpoint)); 
-    } 
 
     // Takes input from analog sticks and convert it into turn and x,y velocities
     // for the wheels
@@ -314,8 +279,8 @@ public class Chassis extends SubsystemBase {
             RobotContainer.m_chassis::getPose, m_swerveDriveKinematics, 
             new PIDController(Constants.SPEED_CONTROLLER_KP, 0, 0), 
             new PIDController(Constants.SPEED_CONTROLLER_KP, 0, 0),
-            new ProfiledPIDController(Constants.SPEED_CONTROLLER_KP, 0, 0, Constants.ANGLE_CONTROLLER_CONSTRAINTS), 
-            RobotContainer.m_chassis::setModuleStates, RobotContainer.m_chassis);
+            new ProfiledPIDController(Constants.ANGLE_CONTROLLER_KP, 0, 0, Constants.ANGLE_CONTROLLER_CONSTRAINTS), 
+            RobotContainer.m_chassis::driveWithModStates, RobotContainer.m_chassis);
             
         return swerveControllerCommand.andThen(new InstantCommand(() -> RobotContainer.m_chassis.convertSwerveValues(0, 0, 0)));
     }
@@ -349,9 +314,10 @@ public class Chassis extends SubsystemBase {
         m_speedMotorBackRight.setSelectedSensorPosition(0);
     }
 
-    public void setModuleStates(SwerveModuleState[] modState)
+    public void driveWithModStates(SwerveModuleState[] modState)
     {
-        moduleStates = modState;
+        ChassisSpeeds chassisSpeeds = m_swerveDriveKinematics.toChassisSpeeds(modState);
+        this.convertSwerveValues(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
     }
 
     public void zeroHeading()
@@ -359,6 +325,4 @@ public class Chassis extends SubsystemBase {
         m_ahrs.reset();
         m_ahrs.setAngleAdjustment(0.0);
     }
-    // Endregion
-
 } 
