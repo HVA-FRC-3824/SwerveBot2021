@@ -162,15 +162,14 @@ public class Chassis extends SubsystemBase
         c = vY - turn * wR;
         d = vY + turn * wR;
 
-        // Adjust for exceeding max speed
-        double highestSpeed = Math.max(Math.max(Math.max(frontRight[0], frontLeft[0]), backLeft[0]), backRight[0]);
-
         // Finding speed of each wheel based on x and y velocities
         frontRight[0] = Math.sqrt(Math.abs(b * b + c * c));
         frontLeft[0] = Math.sqrt(Math.abs(b * b + d * d));
         backLeft[0] = Math.sqrt(Math.abs(a * a + d * d));
         backRight[0] = Math.sqrt(Math.abs(a * a + c * c));
 
+        // Adjust for exceeding max speed
+        double highestSpeed = Math.max(Math.max(Math.max(frontRight[0], frontLeft[0]), backLeft[0]), backRight[0]);
         if (highestSpeed > 1) {
             frontRight[0] = frontRight[0] / highestSpeed;
             frontLeft[0] = frontLeft[0] / highestSpeed;

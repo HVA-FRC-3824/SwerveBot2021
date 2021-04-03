@@ -30,14 +30,14 @@ public class Constants
     public static final int    CHAMBER_WHEEL_ID                  = 0;
 
     // Chassis motor IDs
-    public static final int    BACK_LEFT_ANGLE_ID                = 1;
-    public static final int    BACK_LEFT_SPEED_ID                = 2;
-    public static final int    BACK_RIGHT_ANGLE_ID               = 3;
-    public static final int    BACK_RIGHT_SPEED_ID               = 4;
-    public static final int    FRONT_RIGHT_ANGLE_ID              = 5;
-    public static final int    FRONT_RIGHT_SPEED_ID              = 6;
-    public static final int    FRONT_LEFT_ANGLE_ID               = 7;
-    public static final int    FRONT_LEFT_SPEED_ID               = 8;
+    public static final int    BACK_LEFT_ANGLE_ID                = 4;
+    public static final int    BACK_LEFT_SPEED_ID                = 5;
+    public static final int    BACK_RIGHT_ANGLE_ID               = 6;
+    public static final int    BACK_RIGHT_SPEED_ID               = 7;
+    public static final int    FRONT_RIGHT_ANGLE_ID              = 0;
+    public static final int    FRONT_RIGHT_SPEED_ID              = 1;
+    public static final int    FRONT_LEFT_ANGLE_ID               = 2;
+    public static final int    FRONT_LEFT_SPEED_ID               = 3;
 
     // Launcher motor IDs
     public static final int    LAUNCHER_BOTTOM_MOTOR_ID          = 9; //TODO find right values for motor CAN IDs

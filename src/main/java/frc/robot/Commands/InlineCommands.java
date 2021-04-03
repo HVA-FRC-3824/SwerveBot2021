@@ -54,7 +54,7 @@ public class InlineCommands
             RobotContainer.m_chassis.convertSwerveValues    (
                     RobotContainer.m_OI.getDriverJoystick().getRawAxis(0),
                     RobotContainer.m_OI.getDriverJoystick().getRawAxis(1), 
-                    RobotContainer.m_OI.getDriverJoystick().getRawAxis(2)   ), 
+                    RobotContainer.m_OI.getDriverJoystick().getRawAxis(4)   ), 
                 RobotContainer.m_chassis);
 
         m_resetHeading = 
@@ -69,11 +69,16 @@ public class InlineCommands
         // Launcher commands instantiation
         m_setLauncherVision =
             new ChassisTurnToTarget().andThen(new InstantCommand(() -> RobotContainer.m_limelight.setModeDriver()));
-            //.alongWith(new LauncherAimForTarget(), new InstantCommand(() -> RobotContainer.m_LEDs.setLaunchingStatus(true)))
+            // .alongWith(new LauncherAimForTarget(), new InstantCommand(() -> RobotContainer.m_LEDs.setLaunchingStatus(true)))
         m_setLauncherPreset =
             new LauncherSetPreset();
         m_stopLaunchSequence =
-            this.m_driveWithJoystick.alongWith(new InstantCommand(() -> RobotContainer.m_launcher.stopLauncher(), RobotContainer.m_launcher));
+        new RunCommand(() -> 
+        RobotContainer.m_chassis.convertSwerveValues    (
+                RobotContainer.m_OI.getDriverJoystick().getRawAxis(0),
+                RobotContainer.m_OI.getDriverJoystick().getRawAxis(1), 
+                RobotContainer.m_OI.getDriverJoystick().getRawAxis(4)   ), 
+            RobotContainer.m_chassis).alongWith(new InstantCommand(() -> RobotContainer.m_launcher.stopLauncher(), RobotContainer.m_launcher));
   
    }
 }

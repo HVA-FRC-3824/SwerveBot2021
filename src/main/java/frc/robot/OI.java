@@ -71,17 +71,17 @@ public class OI
         m_setIntakeWheelRPMBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopIntakeWheels);
 
         // Launcher
-        m_setLauncherPresetGreenBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
-        m_setLauncherPresetGreenBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
+        // m_setLauncherPresetGreenBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
+        // m_setLauncherPresetGreenBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
         
-        m_setLauncherPresetYellowBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
-        m_setLauncherPresetYellowBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);   
+        // m_setLauncherPresetYellowBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
+        // m_setLauncherPresetYellowBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);   
 
-        m_setLauncherPresetBlueBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
-        m_setLauncherPresetBlueBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
+        // m_setLauncherPresetBlueBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
+        // m_setLauncherPresetBlueBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
 
-        m_setLauncherPresetRedBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
-        m_setLauncherPresetRedBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
+        // m_setLauncherPresetRedBtn.whenPressed(RobotContainer.m_inlineCommands.m_setLauncherPreset);
+        // m_setLauncherPresetRedBtn.whenReleased(RobotContainer.m_inlineCommands.m_stopLaunchSequence);
 
     }
 

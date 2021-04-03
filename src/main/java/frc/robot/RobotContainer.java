@@ -183,7 +183,7 @@ public class RobotContainer
     SmartDashboard.putData("Autonomous Commands", m_autoChooser);
   }
   
-  // Return the command to run during autonomous
+ // Return the command to run during autonomous
   public Command getAutonomousCommand ()
   {
     switch (m_autoChooser.getSelected())

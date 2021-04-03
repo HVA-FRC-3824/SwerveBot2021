@@ -21,8 +21,6 @@ public class Robot extends TimedRobot {
 
   public static RobotContainer m_robotContainer;
 
-  private static CommandScheduler commandScheduler = CommandScheduler.getInstance();
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -31,8 +29,6 @@ public class Robot extends TimedRobot {
   public void robotInit() 
   {
     m_robotContainer = new RobotContainer();
-    commandScheduler.registerSubsystem(RobotContainer.m_chassis);
-
     CameraServer.getInstance().startAutomaticCapture(0);
   }
   /**
@@ -52,8 +48,8 @@ public class Robot extends TimedRobot {
      * This must be called from the robot's periodic block in order for anything in
      * the Command-based framework to work.
      */
-    commandScheduler.run();
-  }
+    CommandScheduler.getInstance().run();
+    }
 
   /** This function is called once when the robot is disabled. */
   @Override
